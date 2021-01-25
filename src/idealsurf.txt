@@ -1,0 +1,4 @@
+0      ,NELMS: (NSGS /= 0 and NATM=0) means ideal bulk truncation surface.
+1, 1,0,0,1, 2, 0.0,0.0         ,NSGS,msa,msb,nsa,nsb,dthick,DXS,DYS
+0      ,NATM
+1 1 1 1 1 1      ,WDOM
