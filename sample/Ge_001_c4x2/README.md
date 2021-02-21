@@ -10,6 +10,8 @@ bulk.txt
 
 surf.txt
 
+The output files are stored in the output/ directory.
+
 ## (1) bulk-part calculation
 
 First, run the bulk-part calculation by typing
