@@ -2,9 +2,7 @@
 
 ## Overview
 
-The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1], if you use the software in a research paper.
-
-The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[2]. The present document is assumed to be built with gfortran in a standard Linux environment.
+The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1], if you use the software in a research paper. The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[2]. The present document is assumed to be built with gfortran in a standard Linux environment.
 
 Refernce list
 
