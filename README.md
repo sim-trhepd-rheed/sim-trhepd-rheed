@@ -31,7 +31,7 @@ sim-trhepd-rheed
 
 In the sim-trhepd-rheed directory, execute the command below in order.
 
-$ cd source/
+$ cd src
 
 $ make
 
