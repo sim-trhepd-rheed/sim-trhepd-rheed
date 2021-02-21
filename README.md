@@ -38,6 +38,9 @@ bulk.exe
 
 surf.exe
 
+In an application study, one runs bulk.exe first for the calculation of the bulk part and
+then, one runs surf.exe  for the calculation of the surface part. 
+
 As an option, when you build atom coordinate visioning tool, execute the command below. 
 
 $ make xyz
