@@ -16,7 +16,7 @@ Refernce list
 
 ### Download the source code
 
-Download the source code with git command in a  working directory
+Download the source code with git command in a working directory
 
 $ git clone http://github.com/sim-trhepd-rheed/sim-trhepd-rheed
 
@@ -24,7 +24,7 @@ The following directory will be generated
 
 sim-trhepd-rheed
 
-### Building the executable files 
+### Building the binary files 
 
 In the sim-trhepd-rheed directory, execute the command below in order.
 
@@ -45,5 +45,7 @@ $ make xyz
 Then the following files will be generated 
 
 xyzb.exe
+
+Set the environmental variables properly so that you can run the binary files, if needed.
 
 
