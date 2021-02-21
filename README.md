@@ -32,7 +32,7 @@ $ cd src
 
 $ make
 
-Then the following files will be generated 
+Then the following binary files will be generated 
 
 bulk.exe
 
@@ -42,7 +42,7 @@ As an option, when you build atom coordinate visioning tool, execute the command
 
 $ make xyz
 
-Then the following files will be generated 
+Then the following binary file will be generated 
 
 xyzb.exe
 
