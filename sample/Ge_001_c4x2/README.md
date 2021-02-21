@@ -10,6 +10,8 @@ bulk.txt
 
 surf.txt
 
+## (1) bulk-part calculation
+
 First, run the bulk-part calculation by typing
 
 $ bulk.exe
@@ -28,6 +30,55 @@ output-filename :
 
 bulkP.b
 
-and the bulk-data file bulkP.b will be generated. 
+and the output file bulkP.b will be generated. 
+
+## (2) surface-part calculation
+
+Second, run the surface-part calculation by typing 
+
+$ surf.ext
+
+Then the following output will appear 
+
+ bulk-filename (end=e) ? :
+
+bulkP.b             
+
+structure-filename (end=e) ? :
+
+surf.txt            
+
+output-filename :
+
+surf-bulkP.s                      
+
+and the output file surf-bulkP.s wil be generated.
+
+## (3) Convolution procedure 
+
+Third, the convolution procedure should be performed with the python3 script
+
+script/make_convolution.py
+
+in the present package. In general, one should may the source for the lines 
+
+first_line = 5
+
+last_line = 74
+
+row_number = 2
+
+omega = 0.5
+
+The above values are valid for the present sample and one does not need to edit the source. 
+
+$ python3 make_convolution.py 
+
+Then the following output will appear 
+
+len(C_list): 70
+
+and the output file convolution.txt wil be generated.
+
 
 
