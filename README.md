@@ -12,7 +12,7 @@ Refernce list
 
 [2] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).
 
-## Preparation 
+## Code preparation 
 
 ### Download the source code
 
@@ -24,7 +24,7 @@ The following directory will be generated
 
 sim-trhepd-rheed
 
-### Building the binary files 
+### Build the binary files 
 
 In the sim-trhepd-rheed directory, execute the command below in order.
 
@@ -51,4 +51,7 @@ xyzb.exe
 
 Set the environmental variables properly so that you can run the binary files, if needed.
 
+## Test calculation
+
+Test calculations are presented in the sample/ directory. 
 
