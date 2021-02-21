@@ -78,7 +78,23 @@ Then the following output will appear
 
 len(C_list): 70
 
-and the output file convolution.txt wil be generated.
+and the output file convolution.txt wil be generated and contains the rocking-curve data as
 
+0.100000 0.002374995
 
+0.200000 0.003614789
+
+0.300000 0.005023215
+
+.
+
+.
+
+.
+
+6.800000 0.000155263
+
+6.900000 0.000133134
+
+7.000000 0.000101161
 
