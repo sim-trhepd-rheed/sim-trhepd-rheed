@@ -1,6 +1,6 @@
 # sim-trhepd-rheed
 
-# #Overview
+## Overview
 
 The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) 
 and reflection high-energy electron diffraction (RHEED).
@@ -27,7 +27,7 @@ The following directory will be generated
 
 sim-trhepd-rheed
 
-## Building the executable files 
+### Building the executable files 
 
 In the sim-trhepd-rheed directory, execute the command below in order.
 
