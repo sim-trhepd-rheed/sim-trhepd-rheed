@@ -10,6 +10,7 @@ DOMAIN = domain.f90 domainsum.f90
 XYZ = xyzb.f90 strfac.f90 asf.f90 
 SOURCES = asf.f90 strfac.f90 scpot.f90 trmatg.f90 gcmi.f90
 LAPACK = zgeev.f zgeevb.f
+# LAPACK = -llapack -lblas
 
 ALL: bulk surf
 
