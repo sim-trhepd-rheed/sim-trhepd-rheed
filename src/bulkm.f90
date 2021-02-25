@@ -18,7 +18,7 @@
 !       endif
 !       write (*,*) ep
 !
-        ep='P' # 'P' for positoron, 'E' for electron
+        ep='P' ! 'P' for positoron, 'E' for electron
         idiag=3
         iprn=0
 !----------file open-----------
