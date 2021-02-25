@@ -7,7 +7,7 @@ FC = gfortran
 BULK = bulkm.f90 bulkio.f90 bulk.f90 bulksub.f90
 SURF = surfm.f90 surf.f90 surfio.f90 surfsub.f90 domainsum.f90
 DOMAIN = domain.f90 domainsum.f90
-XYZ = xyz.f90 strfac.f90 asf.f90 
+XYZ = xyzb.f90 strfac.f90 asf.f90 
 SOURCES = asf.f90 strfac.f90 scpot.f90 trmatg.f90 gcmi.f90
 LAPACK = zgeev.f zgeevb.f
 
