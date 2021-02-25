@@ -8,27 +8,29 @@
         integer :: inegpos, idiag, iprn, idot
         character fname*20,bname*24,ep*1 !,dia*1 ! ,yn*1
 !---------------------
-        write (*,'(A)') ' 0:electron 1:positron ? '
+!       write (*,'(A)') ' 0:electron 1:positron ? '
 !        read (*,*) inegpos
-        inegpos = 1!#####altered#####
-        if (inegpos <= 0) then
-          inegpos=0; ep='E'
-        else
-          inegpos=1; ep='P'
-        endif
-        write (*,*) ep
+!       inegpos = 1!#####altered#####
+!       if (inegpos <= 0) then
+!         inegpos=0; ep='E'
+!       else
+!         inegpos=1; ep='P'
+!       endif
+!       write (*,*) ep
+!
+        ep='P' # 'P' for positoron, 'E' for electron
         idiag=3
         iprn=0
 !----------file open-----------
       do
-        write (*,'(A)') ' input-filename (end=e) ? :'
+!       write (*,'(A)') ' input-filename (end=e) ? :'
 !        read (*,'(A)') fname
         fname = 'bulk.txt'!#####altered#####
-        write (*,'(" ",A)') fname
+!       write (*,'(" ",A)') fname
 !        if (fname == 'e' .or. fname == 'E') stop
         open (3,file=fname,status='old')
 
-        write (*,'(A)') ' output-filename :'
+!       write (*,'(A)') ' output-filename :'
 !        read (*,'(A)') bname
         idot=scan(fname,".",BACK=.true.)
         if (idot > 0) then
@@ -37,7 +39,7 @@
           idot=LEN_TRIM(fname)
         endif
         bname=fname(:idot)//ep//'.b'
-        write (*,'(" ",A)') bname
+!       write (*,'(" ",A)') bname
         open (1,file=bname,form='unformatted')
 !----------main routine----------
         call bulkio(inegpos,idiag,iprn)
