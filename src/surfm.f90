@@ -17,10 +17,10 @@
       open (4,file='SURF'//cdate(:8)//'-'//ctime(:6)//'log.txt')
 !----------beam loop-----------
     do
-      write (*,'(A)') ' bulk-filename (end=e) ? :'
+!      write (*,'(A)') ' bulk-filename (end=e) ? :'
 !      read (*,'(A)') bname
-      bname = 'bulkP.b'!#####altered#####
-      write (*,'(" ",A)') bname
+      bname = 'bulkP.b' ! 'bulkP.b' for positron, 'bulkE.b' for electron
+!     write (*,'(" ",A)') bname
       if (bname == 'e' .or. bname == 'E') then
         close (4)
         stop
@@ -36,10 +36,10 @@
       endif
 !----------structure loop----------
       do
-        write (*,'(A)') ' structure-filename (end=e) ? :'
+!        write (*,'(A)') ' structure-filename (end=e) ? :'
 !        read (*,'(A)') sname
         sname = 'surf.txt'
-        write (*,'(" ",A)') sname
+!       write (*,'(" ",A)') sname
         if (sname == 'e' .or. sname == 'E') then
           close (1)
           exit
@@ -52,14 +52,14 @@
           idots=LEN_TRIM(sname)
         endif
 
-        write (*,'(A)') ' output-filename :'
+!        write (*,'(A)') ' output-filename :'
 !        read (*,'(A)') fname
         if (ndom > 1) then
           fname=sname(:idots)//'-'//bname(:idotb)//'.md'
         else
           fname=sname(:idots)//'-'//bname(:idotb)//'.s'
         endif
-        write (*,'(" ",A)') fname
+!       write (*,'(" ",A)') fname
         open (3,file=fname)
 
         write (4,'(A)') '----------------------------------'
