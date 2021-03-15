@@ -7,24 +7,26 @@
         integer :: inegpos, idotb,idots, nubulk
         character fname*60,bname*24,sname*24,ep*1 !,dia*1 ! ,yn*1
 !---------------------
-        write (*,'(A)') ' 0:electron 1:positron ? '
-        read (*,*) inegpos
-        if (inegpos <= 0) then
-          inegpos=0; ep='E'
-        else
-          inegpos=1; ep='P'
-        endif
-        write (*,*) ep
+!       write (*,'(A)') ' 0:electron 1:positron ? '
+!       read (*,*) inegpos
+!       if (inegpos <= 0) then
+!         inegpos=0; ep='E'
+!       else
+!         inegpos=1; ep='P'
+!       endif
+!       write (*,*) ep
+        ep='P' ! ep='E' for electron
         write (*,'(A)') ' # of bulk-unit repetition ? '
         read (*,*) nubulk
         if (nubulk < 1) nubulk=1
 !----------file open-----------
-      do
-        write (*,'(A)') ' bulk-input-filename (end=e) ? :'
-        read (*,'(A)') bname
-        write (*,'(" ",A)') bname
-        if (bname == 'e' .or. bname == 'E') stop
-
+!     do
+!       write (*,'(A)') ' bulk-input-filename (end=e) ? :'
+!       read (*,'(A)') bname
+!       write (*,'(" ",A)') bname
+!       if (bname == 'e' .or. bname == 'E') stop
+        bname = 'bulk.txt'
+         
         idotb=scan(bname,".",BACK=.true.)
         if (idotb > 0) then
           idotb=idotb-1
@@ -32,11 +34,12 @@
           idotb=LEN_TRIM(bname)
         endif
 
-        write (*,'(A)') ' surface-structure-filename (end=e) ? :'
-        read (*,'(A)') sname
-        write (*,'(" ",A)') sname
-        if (sname == 'e' .or. sname == 'E') exit
-
+!       write (*,'(A)') ' surface-structure-filename (end=e) ? :'
+!       read (*,'(A)') sname
+!       write (*,'(" ",A)') sname
+!       if (sname == 'e' .or. sname == 'E') exit
+        sname = 'surf.txt'
+!
         idots=scan(sname,".",BACK=.true.)
         if (idots > 0) then
           idots=idots-1
@@ -44,9 +47,9 @@
           idots=LEN_TRIM(sname)
         endif
 
-        write (*,'(A)') ' output-filename :'
+!       write (*,'(A)') ' output-filename :'
 !        read (*,'(A)') fname
-          fname=sname(:idots)//'-'//bname(:idotb)//'.U0'//ep
+          fname=sname(:idots)//'-'//bname(:idotb)//'-U0.txt'
         write (*,'(" ",A)') fname
 !----------main routine----------
         open (4,file=fname)
@@ -64,5 +67,5 @@
         close (2)
 
         close (4)
-      end do
+!     end do
       end
