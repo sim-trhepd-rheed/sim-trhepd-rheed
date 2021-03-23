@@ -25,10 +25,11 @@
       if (ep == 'E') bname = 'bulkE.b'
 !
 !     write (*,'(" ",A)') bname
-      if (bname == 'e' .or. bname == 'E') then
-        close (4)
-        stop
-      endif
+!     if (bname == 'e' .or. bname == 'E') then
+!       close (4)
+!       stop
+!     endif
+!
       open (1,file=bname,status='old',form='unformatted')
       read (1) ndom
 
