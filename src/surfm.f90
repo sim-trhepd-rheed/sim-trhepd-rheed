@@ -12,6 +12,8 @@
 !        read (*,'(A)') fname
 !        if (fname /= ' ') open (5,file=fname)
 !---------------------
+      ep='P' ! 'P' for positoron, 'E' for electron
+!
       iprn=0
       call date_and_time(cdate,ctime,czone, date_time)
       open (4,file='SURF'//cdate(:8)//'-'//ctime(:6)//'log.txt')
@@ -20,6 +22,8 @@
 !      write (*,'(A)') ' bulk-filename (end=e) ? :'
 !      read (*,'(A)') bname
       bname = 'bulkP.b' ! 'bulkP.b' for positron, 'bulkE.b' for electron
+      if (ep == 'E') bname = 'bulkE.b'
+!
 !     write (*,'(" ",A)') bname
       if (bname == 'e' .or. bname == 'E') then
         close (4)
