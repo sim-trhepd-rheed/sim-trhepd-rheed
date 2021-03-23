@@ -1,0 +1,24 @@
+[Main]
+input_xyz_file = "surf_bulk_new111.xyz"
+output_file_head = "surf_bulk_new111_ext"
+[Main.param]
+z_margin = 0.001
+slab_margin = 10.0
+r_SiH = 1.48 #angstrom
+theta = 109.5 #H-Si-H angle in degre
+[Main.lattice]
+unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]
+[ASE]
+solver_name = "qe"
+kpts = [3,3,1]        # sampling k points (Monkhorst-Pack grid)
+command = "mpirun -np 4 ./pw.x -in espresso.pwi > espresso.pwo"
+[Solver]
+[Solver.control]
+calculation='bands' # 'scf','realx','bands',...
+pseudo_dir='./'     # Pseudopotential directory
+[Solver.system]
+ecutwfc = 20.0        # Cut-off energy in Ry
+nbands=33           # # of bands (only used in band structure calc
+[Solver.pseudo]
+Si = 'Si.pbe-mt_fhi.UPF'
+H = 'H.pbe-mt_fhi.UPF'
