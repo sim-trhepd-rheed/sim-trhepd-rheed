@@ -5,7 +5,7 @@
 !*******************************************************************
         program surf
         integer :: iprn,idotb,idots,ndom
-        character bname*20,sname*20,fname*44,dname*46,yn*1
+        character bname*20,sname*20,fname*44,dname*46,yn*1,ep*1
         integer :: date_time(8)
         character*10 cdate,ctime,czone
 !        write (*,'(A)') ' sequence-filename (console=return) ? '
