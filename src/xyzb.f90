@@ -18,12 +18,14 @@
 !        read (*,'(A)') fname
 !        if (fname /= ' ') open (5,file=fname)
 !----------file open-----------
-      do
+!     do
 !----------input bulk data (3)----------
-        write (*,'(A)') ' bulk-input-filename (end=e) ? :'
-        read (*,'(A)') bname
-        write (*,'(" ",A)') bname
-        if (bname == 'e' .or. bname == 'E') stop
+!       write (*,'(A)') ' bulk-input-filename (end=e) ? :'
+!       read (*,'(A)') bname
+!       write (*,'(" ",A)') bname
+!       if (bname == 'e' .or. bname == 'E') stop
+!
+        bname = 'bulk.txt'
         open (3,file=bname,status='old')
 
         read (3,*) nh,nk,ndom
@@ -59,11 +61,13 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
         end do
         close (3)
 !----------input surface data (2)----------
-        write (*,'(A)') ' surface-input-filename ? :'
-        read (*,'(A)') sname
-        write (*,'(" ",A)') sname
+!       write (*,'(A)') ' surface-input-filename ? :'
+!       read (*,'(A)') sname
+!       write (*,'(" ",A)') sname
+!
+        sname='surf.txt'
         open (2,file=sname,status='old')
-
+!
 ! surface atomic parameters
         read (2,*) nelms
 allocate (izs(nelms))
@@ -208,7 +212,7 @@ deallocate (izs)
 deallocate (ielms); deallocate (ocrs)
 deallocate (xs); deallocate (ys); deallocate (zs)
 deallocate (xx); deallocate (yy); deallocate (zz); deallocate (oocr)
-      end do
+!     end do
       end
 !**********************************************************
         subroutine extendxyz(nsg,ma,mb,na,nb,x,y,ndeg,xb,yb)
