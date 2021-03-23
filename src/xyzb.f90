@@ -100,7 +100,7 @@ allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
         endif
         fname=sname(:idots)//'-'//bname(:idotb)//'.xyz'
 
-        write (*,'(" ",A)') fname
+!       write (*,'(" ",A)') fname
         open (1,file=fname)
 !---- count atoms
         natoms=0
