@@ -19,6 +19,9 @@
 !       write (*,*) ep
 !
         ep='P' ! 'P' for positoron, 'E' for electron
+
+        inegpos=1
+        if (ep == 'E') inegpos=0
         idiag=3
         iprn=0
 !----------file open-----------
