@@ -4,6 +4,8 @@ ifeq ($(OS),Windows_NT)
 endif
 
 FC = gfortran
+FCFLAGS=-O3
+#FCFLAGS=-Wall -pedantic -fbounds-check -g -Wuninitialized -ffpe-trap=invalid,zero,overflow -fbacktrace
 BULK = bulkm.f90 bulkio.f90 bulk.f90 bulksub.f90
 SURF = surfm.f90 surf.f90 surfio.f90 surfsub.f90 domainsum.f90
 DOMAIN = domain.f90 domainsum.f90
@@ -16,20 +18,20 @@ LAPACK = zgeev.f zgeevb.f
 ALL: bulk surf xyz potcalc
 
 bulk: $(BULK) $(SOURCES)
-	$(FC) -O3 -o bulk.exe $(BULK) $(SOURCES) $(LAPACK)
+	$(FC) $(FCFLAGS) -o bulk.exe $(BULK) $(SOURCES) $(LAPACK)
 
 surf: $(SURF) $(SOURCES)
-	$(FC) -O3 -o surf.exe $(SURF) $(SOURCES) $(LAPACK)
+	$(FC) $(FCFLAGS) -o surf.exe $(SURF) $(SOURCES) $(LAPACK)
 
 domain: $(DOMAIN)
-	$(FC) -o domain.exe $(DOMAIN)
+	$(FC) $(FCFLAGS) -o domain.exe $(DOMAIN)
 
 xyz: $(XYZ)
-	$(FC) -o xyz.exe $(XYZ)
+	$(FC) $(FCFLAGS) -o xyz.exe $(XYZ)
 
 potcalc: $(POTCALC)
-	$(FC) -o potcalc.exe $(POTCALC)
+	$(FC) $(FCFLAGS) -o potcalc.exe $(POTCALC)
 
 clean:
-	-$(RM) bulk.exe surf.exe domain.exe xyz.exe
+	-$(RM) *.exe 
 
