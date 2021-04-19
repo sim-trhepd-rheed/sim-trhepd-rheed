@@ -1,9 +1,9 @@
 
-sim-trhepd-rheed_doc_gs.pdf
+sim-trhepd-rheed_manual_jp.pdf
 
 User manual (Japanese)
 
-sim-trhepd-rheed_doc_gs_ja.pdf
+sim-trhepd-rheed_doc_gs_jp.pdf
 
-Document for two-dimensional group symmetry (Japanese)
+Document for two-dimensional space group (Japanese)
 
