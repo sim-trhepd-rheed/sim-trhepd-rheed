@@ -5,5 +5,5 @@ User manual (Japanese)
 
 sim-trhepd-rheed_doc_sg_jp.pdf
 
-Document for two-dimensional space group (Japanese)
+Document of two-dimensional space group (Japanese)
 
