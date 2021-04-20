@@ -48,10 +48,10 @@ Set the environmental variables properly so that you can run the binary files, i
 
 Test calculations are presented in the sample/ directory.
 
-## Mode swithcing between TRHEPD and RHEED modes
+## Mode swithcing between TRHEPD (positron) and RHEED (electron) modes
 
-The default setting is the TRHEPD mode. 
-If one would like to use the RHEED mode, one should modify the line 
+The default setting is the TRHEPD (positron) mode. 
+If one would like to use the RHEED (electron) mode, one should modify the line 
 
 ep=‘P'
 
@@ -65,5 +65,6 @@ src/surfm.f90
 
 src/bulkm.f90
 
+and compile the source codes.
 
 
