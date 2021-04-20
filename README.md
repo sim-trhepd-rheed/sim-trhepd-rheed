@@ -59,12 +59,6 @@ into
 
 ep='E'
 
-of the files 
-
-src/surfm.f90
-
-src/bulkm.f90
-
-and compile the source codes.
+of the files src/surfm.f90 and src/bulkm.f90 before the compilation.
 
 
