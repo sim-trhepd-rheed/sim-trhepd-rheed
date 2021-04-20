@@ -46,5 +46,24 @@ Set the environmental variables properly so that you can run the binary files, i
 
 ## Test calculation
 
-Test calculations are presented in the sample/ directory. 
+Test calculations are presented in the sample/ directory.
+
+## Mode swithcing between TRHEPD and RHEED modes
+
+The default setting is the TRHEPD mode. 
+If one would like to use the RHEED mode, one should modify the line 
+
+ep=‘P'
+
+into 
+
+ep='E'
+
+of the files 
+
+src/surfm.f90
+
+src/bulkm.f90
+
+
 
