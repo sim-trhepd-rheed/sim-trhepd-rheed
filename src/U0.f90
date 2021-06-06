@@ -16,6 +16,13 @@
 !       endif
 !       write (*,*) ep
         ep='P' ! ep='E' for electron
+!
+        if (ep == 'P') then
+          inegpos=1
+        else
+          inegpos=0
+        endif
+!
         write (*,'(A)') ' # of bulk-unit repetition ? '
         read (*,*) nubulk
         if (nubulk < 1) nubulk=1
