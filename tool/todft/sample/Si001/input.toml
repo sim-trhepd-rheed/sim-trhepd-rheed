@@ -1,6 +1,6 @@
 [Main]
-input_xyz_file = "surf_si001.xyz"
-output_file_head = "surf_si001_output"
+input_xyz_file = "surf_Si001.xyz"
+output_file_head = "surf_Si001_output"
 [Main.param]
 z_margin = 0.001
 slab_margin = 10.0
