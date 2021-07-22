@@ -8,6 +8,7 @@ if len(args) != 2:
     print("Usage: python to_dft.py <toml file>")
     exit(0)
 file_name = args[1]
+
 import toml
 
 dirs = toml.load(file_name)
@@ -15,6 +16,17 @@ input_main = dirs["Main"]
 input_ase = dirs["ASE"]
 input_sol = dirs["Solver"]
 pseudopotentials = input_sol.pop("pseudo")
+
+try:
+    input_h_term = dirs["H_term"]
+    h_term_type = 1
+except:
+    print("No H_term")
+    h_term_type = 0
+
+if h_term_type == 0:
+    print("h_term_type=",h_term_type)
+    exit(0)
 
 import pprint
 
@@ -60,36 +72,39 @@ ratoms_bottom_most = atoms_bottom_most.get_positions()
 ratoms_bottom_2nd = ratoms[np.where((z_atoms <= z_bottom_2nd[1]) & (z_atoms >= z_bottom_2nd[0]))]
 
 ### Add Hydrogen terminators ###
-r_SiH = input_main["param"]["r_SiH"]
-theta = input_main["param"]["theta"]
-
-dx = r_SiH * math.sin(math.radians(theta * 0.5))
-dy = dx
-dz = r_SiH * math.cos(math.radians(theta * 0.5))
-
-tmp_x_idx = np.arange(ratoms_bottom_most.shape[0])
-tmp_y_idx = np.arange(ratoms_bottom_2nd.shape[0])
-xx, yy = np.meshgrid(tmp_x_idx, tmp_y_idx)
-rxy_atoms_most = ratoms_bottom_most[:, :2]
-rxy_atoms_2nd = ratoms_bottom_2nd[:, :2]
-distances = np.linalg.norm(rxy_atoms_most[xx] - rxy_atoms_2nd[yy], axis=2)
-
-for idx, r2 in enumerate(ratoms_bottom_2nd):
-    r1 = ratoms_bottom_most[np.argmin(distances[:, idx])]
-    x12 = r1[0] - r2[0]
-    y12 = r1[1] - r2[1]
-    if (np.abs(x12) < 1e-12 and np.abs(y12) > 1e-12) or (np.abs(x12) > 1e-12 and np.abs(y12) < 1e-12):
-        print('(001)surface')
-        if np.abs(x12) < 1e-12:
-            atoms_info += Atoms(numbers=[1, 1],
-                                positions=[(r2[0], r2[1] - dy, r2[2] - dz), (r2[0], r2[1] + dy, r2[2] - dz)])
-        else:
-            atoms_info += Atoms(numbers=[1, 1],
-                                positions=[(r2[0] - dx, r2[1], r2[2] - dz), (r2[0] + dx, r2[1], r2[2] - dz)])
-    elif np.abs(x12) < 1e-12 and np.abs(y12) < 1e-12:
-        print('(111)surface')
-        atoms_info += Atoms(numbers=[1], positions=[(r2[0], r2[1], r2[2] - r_SiH)])
-
+if h_term_type == 1:
+    r_SiH = input_h_term["r_SiH"]
+    theta = input_h_term["theta"]
+    
+    dx = r_SiH * math.sin(math.radians(theta * 0.5))
+    dy = dx
+    dz = r_SiH * math.cos(math.radians(theta * 0.5))
+    
+    tmp_x_idx = np.arange(ratoms_bottom_most.shape[0])
+    tmp_y_idx = np.arange(ratoms_bottom_2nd.shape[0])
+    xx, yy = np.meshgrid(tmp_x_idx, tmp_y_idx)
+    rxy_atoms_most = ratoms_bottom_most[:, :2]
+    rxy_atoms_2nd = ratoms_bottom_2nd[:, :2]
+    distances = np.linalg.norm(rxy_atoms_most[xx] - rxy_atoms_2nd[yy], axis=2)
+    
+    for idx, r2 in enumerate(ratoms_bottom_2nd):
+        r1 = ratoms_bottom_most[np.argmin(distances[:, idx])]
+        x12 = r1[0] - r2[0]
+        y12 = r1[1] - r2[1]
+        if (np.abs(x12) < 1e-12 and np.abs(y12) > 1e-12) or (np.abs(x12) > 1e-12 and np.abs(y12) < 1e-12):
+            print('(001)surface')
+            if np.abs(x12) < 1e-12:
+                atoms_info += Atoms(numbers=[1, 1],
+                                    positions=[(r2[0], r2[1] - dy, r2[2] - dz), (r2[0], r2[1] + dy, r2[2] - dz)])
+            else:
+                atoms_info += Atoms(numbers=[1, 1],
+                                    positions=[(r2[0] - dx, r2[1], r2[2] - dz), (r2[0] + dx, r2[1], r2[2] - dz)])
+        elif np.abs(x12) < 1e-12 and np.abs(y12) < 1e-12:
+            print('(111)surface')
+            atoms_info += Atoms(numbers=[1], positions=[(r2[0], r2[1], r2[2] - r_SiH)])
+else:
+    pass   
+    
 print("Symbols = {}".format(atoms_info.symbols))
 print("natoms = {}".format(len(atoms_info)))
 ### Get cell info ###
