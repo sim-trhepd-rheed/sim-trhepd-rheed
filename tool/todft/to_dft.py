@@ -17,17 +17,6 @@ input_ase = dirs["ASE"]
 input_sol = dirs["Solver"]
 pseudopotentials = input_sol.pop("pseudo")
 
-try:
-    input_h_term = dirs["H_term"]
-    h_term_type = 1
-except:
-    print("No H_term")
-    h_term_type = 0
-
-if h_term_type == 0:
-    print("h_term_type=",h_term_type)
-    exit(0)
-
 import pprint
 
 print("Parameters for main part")
@@ -38,6 +27,16 @@ print("Parameters for solver part")
 pprint.pprint(input_sol)
 print("Pseudopotentials")
 pprint.pprint(pseudopotentials)
+
+try:
+    input_h_term = dirs["H_term"]
+    h_term_type = 1
+    print("Parameters for H_term part")
+    pprint.pprint(input_h_term)
+    except:
+    print("Info: No H_term tag")
+    h_term_type = 0
+
 
 ### Read/Write file names ###
 file_name = input_main["input_xyz_file"]
