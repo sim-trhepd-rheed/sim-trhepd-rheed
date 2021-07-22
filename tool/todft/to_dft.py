@@ -33,7 +33,7 @@ try:
     h_term_type = 1
     print("Parameters for H_term part")
     pprint.pprint(input_h_term)
-    except:
+except:
     print("Info: No H_term tag")
     h_term_type = 0
 
