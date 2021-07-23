@@ -4,11 +4,11 @@ output_file_head = "surf_Si001_output"
 [Main.param]
 z_margin = 0.001
 slab_margin = 10.0
+[Main.lattice]
+unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]
 [H_term]
 r_SiH = 1.48 #angstrom
 theta = 109.5 #H-Si-H angle in degre
-[Main.lattice]
-unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]
 [ASE]
 solver_name = "qe"
 kpts = [3,3,1]        # sampling k points (Monkhorst-Pack grid)
