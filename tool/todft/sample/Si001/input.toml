@@ -15,7 +15,7 @@ kpts = [3,3,1]        # sampling k points (Monkhorst-Pack grid)
 command = "mpirun -np 4 ./pw.x -in espresso.pwi > espresso.pwo"
 [Solver]
 [Solver.control]
-calculation='scf' # 'scf','realx','bands',...
+calculation='scf' # 'scf','relax','bands',...
 pseudo_dir='./'     # Pseudopotential directory
 [Solver.system]
 ecutwfc = 20.0        # Cut-off energy in Ry
