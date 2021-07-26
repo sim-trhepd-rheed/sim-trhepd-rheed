@@ -616,7 +616,7 @@ the input file of QE from the xyz-formatted structure file.
 The utility can also run QE, if QE is installed.
 As an optional function,
 the utility supports the generation of hydrogen-terminated structure
-in limited types of surface structures. 
+in limited types of surface structures.
 
 
 Prerequisites
@@ -815,15 +815,26 @@ After finishing calculations, the following files are generated:
 - ``surf_Si001_output.xyz``
 - ``surf_Si001_output.cif``
 - ``espresso.pwi``
+- ``espresso.pwo``
 
-If the path to the QE and pseudopotential is set in the input file, the first-principle calculation will be performed as is. If not, the ab initio calculation will not be performed and you will get the message ``Calculation of get_potential_energy is not normally finished.`` at the end, but the above file will still be output.
+The input structure of QE is described in
+the three files ``surf_Si001_output.xyz``,
+``surf_Si001_output.cif`` and ``espresso.pwi``,
+as the xyz-formatted file,
+the file in the Crystallographic Information File (CIF) format and
+the input file of QE, respectively.
+The files in the xyz and CIF formats
+are useful for visualization
+are not required for QE.
+If QE works properly,
+the output file of QE, ``espresso.pwo``, appears.
+If QE is does not work properly,
+the output file ``espresso.pwo`` is a file with error messages.
+One can perform QE
+on a different machine with the above file ``espresso.pwi``
 
-The following is a description of the output file.
-
-- ``surf_Si001_output.xyz``
-
-The output is the result of the replacement of the lowest level atom with H and the addition of H to form a tetrahedral structure.
-The actual output is as follows.
+The content of ``surf_Si001_output.xyz``,
+the hydrogen-terminated structure,  is as follows.
 
 .. code-block::
 
@@ -843,7 +854,3 @@ The actual output is as follows.
   H        1.91983000       1.20862950       3.46707512
   H        5.75949000      -1.20862950       3.46707512
   H        5.75949000       1.20862950       3.46707512
-
-This file can be read by appropriate visualization software as ordinary XYZFormat coordinate data, but the lattice vector information of the periodic structure is written in the place where comments are usually written. You can also copy the data of "element name + 3D coordinate" from the third line of the output file to the input file of QE.
-
-``espresso.pwi`` is the input file for QE's scf calculation, and structural optimization and band calculation can be done by modifying this file accordingly. For details, please refer to the `QE online manual <https://www.quantum-espresso.org/Doc/INPUT_PW.html>`_ .
