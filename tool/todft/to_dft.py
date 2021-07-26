@@ -9,9 +9,24 @@ if len(args) != 2:
     exit(0)
 file_name = args[1]
 
-import toml
+try:
+    from tomli import load as toml_load
+except ImportError:
+    try: 
+        from toml import load as toml_load
+        print("WARNING: tomli is not found and toml is found.")
+        print("         use of toml package is left for compatibility.")
+        print("         please install tomli package.")
+        print("HINT: python3 -m pip install tomli")
+    except ImportError:
+        print("ERROR: tomli is not found")
+        print("HINT: python3 -m pip install tomli")
+        exit(1)
 
-dirs = toml.load(file_name)
+
+with open(file_name) as f:
+    dirs = toml_load(f)
+
 input_main = dirs["Main"]
 input_ase = dirs["ASE"]
 input_sol = dirs["Solver"]
