@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-How to use sim-trhepd-rheed
+sim-trhepd-rheed documentation
 ===================================================================================
 
 .. toctree::
@@ -603,3 +603,247 @@ For example, one types
 
 for the surface region and the bulk region,
 where the bulk region consists of three bulk-unit repetitions.
+
+
+utility to_dft.py
+===============================================================================
+
+The Python3 utility to_dft.py enables us a DFT calculation by
+`Quantum Espresso (QE) <https://www.quantum-espresso.org/>`_ for the files in STR.
+
+The utility generates
+the input file of QE from the xyz-formatted structure file.
+The utility can also run QE, if QE is installed.
+As an optional function,
+the utility supports the generation of hydrogen-terminated structure
+in limited types of surface structures. 
+
+
+Prerequisites
+---------------------------------------
+
+The utility requires
+
+- Python3 >= 3.6
+
+The following packages are also required:
+
+- `Atomic Simulation Environment(ASE) <https://wiki.fysik.dtu.dk/ase>`_ (>= 3.21.1)
+- Numpy
+- Scipy
+- Matplotlib
+- Tomli
+
+
+
+Tutorial with Si(001)-(2x1) surface
+---------------------------------------
+
+This section gives a tutorial of to_dft.py with Si(001)-(2x1) surface.
+The input and output files are available on
+the directory `` tool/todft/sample/Si001 ``.
+
+1. Prepare an xyz-formatted structure file for reference.
+
+In the following,
+we will use the file ``surf_Si001.xyz`` in the directory ``tool/todft/sample/Si001/``.
+The contents of the file are as follows.
+
+.. code-block::
+
+   12
+   Si(001) surface test
+    Si    1.219476    0.000000    9.264930
+    Si    6.459844    0.000000    9.987850
+    Si    1.800417    1.919830    8.404650
+    Si    5.878903    1.919830    8.404650
+    Si    3.839660    1.919830    7.155740
+    Si    0.000000    1.919830    6.900440
+    Si    3.839660    0.000000    5.743910
+    Si    0.000000    0.000000    5.597210
+    Si    1.919830    0.000000    4.321250
+    Si    5.759490    0.000000    4.321250
+    Si    1.919830    1.919830    2.963750
+    Si    5.759490    1.919830    2.963750
+
+
+2. Next, create an input file for setting the various parameters.
+
+The file format of the input file is ``toml``. The following section describes the contents of the input file using ``input.toml`` in the ``tool/todft/sample/111`` folder. The contents of the file are as follows.
+
+.. code-block::
+
+   [Main]
+   input_xyz_file = "surf_Si001.xyz"
+   output_file_head = "surf_Si001_output"
+   [Main.param]
+   z_margin = 0.001
+   slab_margin = 10.0
+   [Main.lattice]
+   unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]
+   [H_term]
+   r_SiH = 1.48 #angstrom
+   theta = 109.5 #H-Si-H angle in degree
+   [ASE]
+   solver_name = "qe"
+   kpts = [3,3,1]        # sampling k points (Monkhorst-Pack grid)
+   command = "mpirun -np 4 ./pw.x -in espresso.pwi > espresso.pwo"
+   [Solver]
+   [Solver.control]
+   calculation='bands' # 'scf','realx','bands',...
+   pseudo_dir='./'     # Pseudopotential directory
+   [Solver.system]
+   ecutwfc = 20.0        # Cut-off energy in Ry
+   nbands=33           # # of bands (only used in band structure calc
+   [Solver.pseudo]
+   Si = 'Si.pbe-mt_fhi.UPF'
+   H = 'H.pbe-mt_fhi.UPF'
+
+The input file consists of four sections: ``Main``, ``H_term``, ``ASE``, and ``Solver``.
+Below is a brief description of the variables for each section.
+The section ``H_term`` is required,
+only if one would like to generate the hydrogen-terminated structure.
+If not, the section  ``H_term`` should not appear.
+
+
+``Main`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This section contains settings related to the parameters required for hydrogen termination.
+
+- ``input_xyz_file``
+
+  Format: string
+
+  Description: Name of the xyz file to input
+
+- ``output_file_head``
+
+  Format: string
+
+  Description: Header for output files (xyz and cif files)
+
+``Main.Param`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- ``z_margin``
+
+  Format: float
+
+  Description: Margin used to extract the lowest and second-to-last atoms. For example, if the z-coordinate of the atom in the bottom layer is ``z_min``, the atoms in ``z_min - z_margin <= z <= z_min + z_margin`` will be extracted.
+
+- ``slab_margin``
+
+  Format: float
+
+  Description: Margin for tuning the size of the slab. If the z-coordinates of the atoms in the bottom and top layers are ``z_min`` , ``z_max``, then the slab size is given by ``z_max-z_min+slab_margin``.
+
+
+``Main.lattice`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- ``unit_vec``
+
+  Format: list
+
+  Description: Specify a unit vector that forms a 2D plane (ex. ``unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]``).
+
+``H_term`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This section enables us to generate the hydrogen-terminated structure.
+At the present code supports
+the hydrogen-terminated structures
+only for the (001)-type and (111)-type slab of the silicon diamond structure.
+The hydrogen-terminated models are generated in the following manner:
+The bottom layer atoms are removed, and H atoms are placed
+at the corresponding positions to create a model
+with the distance to the next layer atoms adjusted to a tetrahedral structure
+(for example, the distance to a silane molecule in the case of Si).
+
+- ``r_SiH``
+
+  Format: float
+
+  Description: The distance (in :math:`\mathrm{\mathring{A}}`) between a vertex (e.g. Si) and H of a tetrahedral structure.
+
+
+- ``theta``
+
+  Format: float
+
+  Description: The angle between the vertex and H of the tetrahedral structure (e.g. Si-H-Si).
+
+
+
+``ASE`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This section specifies parameters related to ``ASE``.
+
+- ``solver_name``
+
+  Format: string
+
+  Description: The name of the solver. Currently, only ``qe`` is given.
+
+- ``kpts``
+
+  Format: list
+
+  Description: Specify the k-points to be sampled (Monkhorst-Pack grid).
+
+- ``command``
+
+  Format: string
+
+  Description: Set the command used to run the solver.
+
+``Solver`` section
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In this section, parameters related to ``Solver`` are specified.
+You will need to specify this if you want to perform first-principles calculations directly using ASE.
+Basically, the configuration is the same as the one specified in the input file of each solver.
+For example, in the case of QE, ``Solver.control`` contains the parameters to be set in the ``control`` section of QE.
+
+3. Execute the following command.
+
+.. code-block::
+
+    python3 to_dft.py input.toml
+
+After finishing calculations, the following files are generated:
+
+- ``surf_Si001_output.xyz``
+- ``surf_Si001_output.cif``
+- ``espresso.pwi``
+
+If the path to the QE and pseudopotential is set in the input file, the first-principle calculation will be performed as is. If not, the ab initio calculation will not be performed and you will get the message ``Calculation of get_potential_energy is not normally finished.`` at the end, but the above file will still be output.
+
+The following is a description of the output file.
+
+- ``surf_Si001_output.xyz``
+
+The output is the result of the replacement of the lowest level atom with H and the addition of H to form a tetrahedral structure.
+The actual output is as follows.
+
+.. code-block::
+
+  14
+  Lattice= "7.67932 0.0 0.0 0.0 3.83966 0.0 0.0 0.0 17.0241" Properties=species:S:1:pos:R:3 pbc="T T T"
+  Si       1.21947600       0.00000000       9.26493000
+  Si       6.45984400       0.00000000       9.98785000
+  Si       1.80041700       1.91983000       8.40465000
+  Si       5.87890300       1.91983000       8.40465000
+  Si       3.83966000       1.91983000       7.15574000
+  Si       0.00000000       1.91983000       6.90044000
+  Si       3.83966000       0.00000000       5.74391000
+  Si       0.00000000       0.00000000       5.59721000
+  Si       1.91983000       0.00000000       4.32125000
+  Si       5.75949000       0.00000000       4.32125000
+  H        1.91983000      -1.20862950       3.46707512
+  H        1.91983000       1.20862950       3.46707512
+  H        5.75949000      -1.20862950       3.46707512
+  H        5.75949000       1.20862950       3.46707512
+
+This file can be read by appropriate visualization software as ordinary XYZFormat coordinate data, but the lattice vector information of the periodic structure is written in the place where comments are usually written. You can also copy the data of "element name + 3D coordinate" from the third line of the output file to the input file of QE.
+
+``espresso.pwi`` is the input file for QE's scf calculation, and structural optimization and band calculation can be done by modifying this file accordingly. For details, please refer to the `QE online manual <https://www.quantum-espresso.org/Doc/INPUT_PW.html>`_ .
