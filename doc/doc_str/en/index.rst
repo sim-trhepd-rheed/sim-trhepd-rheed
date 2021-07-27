@@ -802,7 +802,17 @@ This section specifies parameters related to ``ASE``.
 In this section, parameters related to ``Solver`` are specified.
 You will need to specify this if you want to perform first-principles calculations directly using ASE.
 Basically, the configuration is the same as the one specified in the input file of each solver.
-For example, in the case of QE, ``Solver.control`` contains the parameters to be set in the ``control`` section of QE.
+For example, in the case of QE, ``Solver.control`` contains the parameters to be set in the ``control`` section of QE. The required pseudopotential files written in ``Solver.pseudo`` section should be downloaded, for example, by the wget command:
+
+.. code-block::
+
+    wget https://www.quantum-espresso.org/upf_files/H.pbe-mt_fhi.UPF
+    wget https://www.quantum-espresso.org/upf_files/Si.pbe-mt_fhi.UPF
+
+
+    
+``Si.pbe-mt_fhi.UPF`` and ``H.pbe-mt_fhi.UPF``
+
 
 3. Execute the following command.
 
