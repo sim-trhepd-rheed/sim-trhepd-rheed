@@ -810,8 +810,7 @@ For example, in the case of QE, ``Solver.control`` contains the parameters to be
     wget https://www.quantum-espresso.org/upf_files/H.pbe-kjpaw_psl.1.0.0.UPF
 
 
-    
-``Si.pbe-mt_fhi.UPF`` and ``H.pbe-mt_fhi.UPF``
+
 
 
 3. Execute the following command.
