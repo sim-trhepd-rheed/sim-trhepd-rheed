@@ -696,8 +696,8 @@ The file format of the input file is ``toml``. The following section describes t
    ecutwfc = 20.0        # Cut-off energy in Ry
    nbands=33           # # of bands (only used in band structure calc
    [Solver.pseudo]
-   Si = 'Si.pbe-mt_fhi.UPF'
-   H = 'H.pbe-mt_fhi.UPF'
+   Si = 'Si.pbe-n-kjpaw_psl.1.0.0.UPF'
+   H = 'H.pbe-kjpaw_psl.1.0.0.UPF'
 
 The input file consists of four sections: ``Main``, ``H_term``, ``ASE``, and ``Solver``.
 Below is a brief description of the variables for each section.
@@ -806,8 +806,8 @@ For example, in the case of QE, ``Solver.control`` contains the parameters to be
 
 .. code-block::
 
-    wget https://www.quantum-espresso.org/upf_files/H.pbe-mt_fhi.UPF
-    wget https://www.quantum-espresso.org/upf_files/Si.pbe-mt_fhi.UPF
+    wget https://www.quantum-espresso.org/upf_files/Si.pbe-n-kjpaw_psl.1.0.0.UPF
+    wget https://www.quantum-espresso.org/upf_files/H.pbe-kjpaw_psl.1.0.0.UPF
 
 
     
