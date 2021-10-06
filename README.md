@@ -22,6 +22,18 @@ The following directory will be generated
 
 sim-trhepd-rheed
 
+## Directory Tree
+
+ * `doc/`: The documents directory
+   * `sim-trhepd-rheed_en.pdf` : pdf manual for sim-trhepd-rheed
+ * `sample/`: The sample directory
+   * `Ge_001_c4x2/` : The sample directory for Ge_001_c4x2 which contains README, and input/output files for sim-trhepd-rheed.
+   * `T4Al_on_Si_111/` :  The sample directory for T4Al_on_Si_111 which contains README, and input/output files for sim-trhepd-rheed.
+ * `script/`: The dicrectory contains the post script `make_convolution.py` for calculating rocking curve.
+ * `src/`: The source directory
+ * `tool/`: The directory contains the post tool
+   * `todft/`: The directory contains the post tool `to_dft.py` for generating the input file for Quantum ESPRESSO.  
+
 ### Build the binary files 
 
 In the sim-trhepd-rheed directory, execute the command below in order.
