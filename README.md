@@ -25,6 +25,7 @@ sim-trhepd-rheed
 ## Directory Tree
 
  * `doc/`: The documents directory
+   * `html/`: html manual for sim-trhepd-rheed
    * `sim-trhepd-rheed_en.pdf` : pdf manual for sim-trhepd-rheed
  * `sample/`: The sample directory
    * `Ge_001_c4x2/` : The sample directory for Ge_001_c4x2 which contains README, and input/output files for sim-trhepd-rheed.
