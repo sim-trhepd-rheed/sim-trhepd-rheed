@@ -1,10 +1,9 @@
 &CONTROL
-   calculation      = 'scf'
+   calculation      = 'relax'
    pseudo_dir       = './'
 /
 &SYSTEM
    ecutwfc          = 20.0
-   nbands           = 33
    ntyp             = 2
    nat              = 14
    ibrav            = 0
@@ -17,8 +16,8 @@
 /
 
 ATOMIC_SPECIES
-Si 28.085 Si.pbe-mt_fhi.UPF
-H 1.008 H.pbe-mt_fhi.UPF
+Si 28.085 Si.pbe-n-kjpaw_psl.1.0.0.UPF
+H 1.008 H.pbe-kjpaw_psl.1.0.0.UPF
 
 K_POINTS automatic
 3 3 1  0 0 0
