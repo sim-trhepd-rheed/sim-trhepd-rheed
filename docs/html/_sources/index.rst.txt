@@ -94,7 +94,7 @@ In addition, Python3 scripts
 
 ::
 
-  script/make_convolution.py
+  tool/make_convolution.py
   tool/todft/to_dft.py
 
 are also prepared.

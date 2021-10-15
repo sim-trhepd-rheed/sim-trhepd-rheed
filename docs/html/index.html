@@ -4,16 +4,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>sim-trhepd-rheed documentation &#8212; SIM-TRHEPD-RHEED 1.0 documentation  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -34,14 +34,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sim-trhepd-rheed-documentation">
+  <div class="section" id="sim-trhepd-rheed-documentation">
 <h1>sim-trhepd-rheed documentation<a class="headerlink" href="#sim-trhepd-rheed-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<span class="target" id="chapter02"></span></section>
-<section id="introduction">
+<span class="target" id="chapter02"></span></div>
+<div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<section id="overview">
+<div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The software package SIM-TRHEPD-RHEED (STR) is
 a simulator for total-reflection high-energy positron diffraction (TRHEPD)
@@ -57,15 +57,15 @@ A standard Linux environment is assumed throughout the present document.</p>
 <p>[1] T. Hanada, H. Daimon, and S. Ino, Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R30°-Al, -Ga, and -In surfaces, Phys. Rev. B 51, 13320–13325 (1995).</p>
 <p>[2] T. Hanada, Y. Motoyama, K. Yoshimi and T. Hoshi, submitted to Computer Physics Communications.</p>
 <p>[3] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).</p>
-</section>
-<section id="license">
+</div>
+<div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>This package is distributed under GNU General Public License version 3 (GPL v3).</p>
-</section>
-</section>
-<section id="installation">
+</div>
+</div>
+<div class="section" id="installation">
 <span id="chapter03"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<section id="download-and-installation">
+<div class="section" id="download-and-installation">
 <h2>Download and installation<a class="headerlink" href="#download-and-installation" title="Permalink to this headline">¶</a></h2>
 <p>Here, a standard linux OS with a Fortran90 and Python3 environment is assumed.</p>
 <p>One can download the source code with git command in a working directory</p>
@@ -93,15 +93,15 @@ are stored in the src/ directory and are also compiled.
 If LAPACK is preinstalled in your computer, you can use preinstalled LAPACK
 by editing the src/Makefile file properly.</p>
 <p>In addition, Python3 scripts</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">script</span><span class="o">/</span><span class="n">make_convolution</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tool</span><span class="o">/</span><span class="n">make_convolution</span><span class="o">.</span><span class="n">py</span>
 <span class="n">tool</span><span class="o">/</span><span class="n">todft</span><span class="o">/</span><span class="n">to_dft</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>are also prepared.
 The required Python modules for the scripts will be explained later.</p>
 <p>Set the environmental variables properly so that you can run the binary files and the srcipts.</p>
-</section>
-<section id="switching-between-trhepd-and-rheed-modes">
+</div>
+<div class="section" id="switching-between-trhepd-and-rheed-modes">
 <h2>Switching between TRHEPD and RHEED modes<a class="headerlink" href="#switching-between-trhepd-and-rheed-modes" title="Permalink to this headline">¶</a></h2>
 <p>The default source code of STR
 is written for TRHEPD experiment.
@@ -116,11 +116,11 @@ one should modify the line</p>
 </div>
 <p>in bulkm.f90, surfm.f90, U0.f90, before the compilation.
 Hereafter we explain the TRHEPD case.</p>
-</section>
-</section>
-<section id="usage">
+</div>
+</div>
+<div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<section id="brief-explanation">
+<div class="section" id="brief-explanation">
 <h2>Brief explanation<a class="headerlink" href="#brief-explanation" title="Permalink to this headline">¶</a></h2>
 <p>In STR, the partial differential equation (PDE) of dynamical quantum diffraction
 theory</p>
@@ -146,8 +146,8 @@ by make_convolution.py.
 The details of both input and output files are explained in Example 1.
 We also show the schematic figure of TRHEPD and RHEED experiments below.</p>
 <a class="reference internal image-reference" href="_images/TRHEPD_overview.pdf"><img alt="Schematic figure of TRHEPD and RHEED experiments." src="_images/TRHEPD_overview.pdf" /></a>
-</section>
-<section id="list-of-the-two-dimensional-space-groups">
+</div>
+<div class="section" id="list-of-the-two-dimensional-space-groups">
 <h2>List of the two-dimensional space groups<a class="headerlink" href="#list-of-the-two-dimensional-space-groups" title="Permalink to this headline">¶</a></h2>
 <p>In the input file bulk.txt and surf.txt,
 one can specify the bulk and surface structure
@@ -218,9 +218,9 @@ and are shown in the following table</p>
 </tr>
 </tbody>
 </table>
-</section>
-</section>
-<section id="example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom">
+</div>
+</div>
+<div class="section" id="example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom">
 <h1>Example 1: Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R30 <img class="math" src="_images/math/aa7ccbffb40dcc75237a404052776566b273623b.png" alt="^{\circ}"/> surface with a T4-site Al adatom<a class="headerlink" href="#example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom" title="Permalink to this headline">¶</a></h1>
 <p>The present package contains two examples in the sample/ directory for tutorial.
 In the code,
@@ -236,7 +236,7 @@ The input data files, bulk.txt and surf.txt,
 are stored in the sample/T4Al_on_Si_111/ directory.
 The output files are stored
 in the sample/T4Al_on_Si_111/output/ directory.</p>
-<section id="first-stage-bulk-part-calculation">
+<div class="section" id="first-stage-bulk-part-calculation">
 <h2>First stage: bulk part calculation<a class="headerlink" href="#first-stage-bulk-part-calculation" title="Permalink to this headline">¶</a></h2>
 <p>The bulk part is the crystalline silicon and
 the input file bulk.txt is as follows</p>
@@ -428,8 +428,8 @@ from the atoms the lower unit  <img class="math" src="_images/math/53f348e01e1d8
 <p>and the output file bulkP.b, a binary file, appears.
 The output file is required in the surface part calculation
 explained in the next subsubsection.</p>
-</section>
-<section id="second-stage-surface-part-calculation">
+</div>
+<div class="section" id="second-stage-surface-part-calculation">
 <h2>Second stage: surface part calculation<a class="headerlink" href="#second-stage-surface-part-calculation" title="Permalink to this headline">¶</a></h2>
 <p>The surface part is described in the input file surf.txt as follows:</p>
 <p><strong>surf.txt</strong></p>
@@ -537,8 +537,8 @@ is described as ‘1, 1, 1’.</p>
 <p>The second line <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">66</span> <span class="pre">13</span></code> gives a number of azimuth angles (NDOM), glancing angles ( (GF-GI)/DG + 1), and beams (NB), respectively.
 The fourth line <code class="docutils literal notranslate"><span class="pre">-6</span>&#160; <span class="pre">-6</span>&#160; <span class="pre">-5</span>&#160; <span class="pre">-5</span> <span class="pre">..</span></code> shows (IH(I),IK(I)) defined in the surf.txt.
 After the fifth line, the values <img class="math" src="_images/math/4b7ecac43251f368d74d5b5dbea50b420372d532.png" alt="\theta_j"/> and <img class="math" src="_images/math/e3d4354dc9a03f00e6b2ffeebafb03798b63e79c.png" alt="I_{hk}^{\rm (cal,0)}(\theta_j)"/> are given.</p>
-</section>
-<section id="third-stage-convolution-procedure">
+</div>
+<div class="section" id="third-stage-convolution-procedure">
 <h2>Third stage: convolution procedure<a class="headerlink" href="#third-stage-convolution-procedure" title="Permalink to this headline">¶</a></h2>
 <p>After the surface-part calculation,
 the convolution procedure <img class="math" src="_images/math/de9b19955f494f905052ae39a88bfd134543909f.png" alt="I_{hk}^{\rm (cal)}(\theta) =  \int_{\theta_{\rm min}}^{\theta_{\rm max}} I_{hk}^{\rm (cal, 0)}(\theta') g(\theta - \theta') d \theta'"/>
@@ -559,14 +559,14 @@ The example of convolution.txt is shown below.</p>
 <span class="mf">7.00000e-01</span> <span class="mf">1.54062e-141</span> <span class="mf">7.59395e-95</span> <span class="mf">5.06471e-58</span> <span class="mf">5.91723e-31</span> <span class="mf">4.70229e-13</span> <span class="mf">2.57949e-04</span> <span class="mf">9.08240e-03</span> <span class="mf">2.57949e-04</span> <span class="mf">4.70229e-13</span> <span class="mf">5.91723e-31</span> <span class="mf">5.06471e-58</span> <span class="mf">7.59395e-95</span> <span class="mf">1.54062e-141</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="example-2-ge-001-c-4-times-2-surface">
+</div>
+</div>
+<div class="section" id="example-2-ge-001-c-4-times-2-surface">
 <h1>Example 2: Ge(001)-c(<img class="math" src="_images/math/e070f69e0f6e7646c97cf85301f365b18bbaf571.png" alt="4 \times 2"/>) surface<a class="headerlink" href="#example-2-ge-001-c-4-times-2-surface" title="Permalink to this headline">¶</a></h1>
 <p>The second example is the TRHEPD data for
 Ge(001)-c(<img class="math" src="_images/math/e070f69e0f6e7646c97cf85301f365b18bbaf571.png" alt="4 \times 2"/>) surface structure in the  one-beam condition.
 The present section details the usage of the two optional utilities, xyz.exe and potcalc.exe.</p>
-<section id="utility-xyz-exe">
+<div class="section" id="utility-xyz-exe">
 <h2>Utility xyz.exe<a class="headerlink" href="#utility-xyz-exe" title="Permalink to this headline">¶</a></h2>
 <p>The utility xyz.exe generates the atom position data into the xyz-format file
 and is used, for example, when one would like to visualize the atomic structure.
@@ -600,8 +600,8 @@ The last two lines of the file</p>
 <p>indicate the two-dimensional periodic cell vectors,
 <img class="math" src="_images/math/74711b22e5b5eb11870763083b600d09e37f7336.png" alt="a_{\rm file} = (16.00267 \AA, 0)"/> and
 <img class="math" src="_images/math/efd2a26c24ca62a44c4293ac5ca15789530d2251.png" alt="b_{\rm file} = (0, 8.00134 \AA)"/>.</p>
-</section>
-<section id="utility-potcalc-exe">
+</div>
+<div class="section" id="utility-potcalc-exe">
 <h2>Utility potcalc.exe<a class="headerlink" href="#utility-potcalc-exe" title="Permalink to this headline">¶</a></h2>
 <p>After the surface part calculations,
 the utility potcalc.exe plots the complex potential
@@ -620,9 +620,9 @@ For example, one types</p>
 </div>
 <p>for the surface region and the bulk region,
 where the bulk region consists of three bulk-unit repetitions.</p>
-</section>
-</section>
-<section id="utility-to-dft-py">
+</div>
+</div>
+<div class="section" id="utility-to-dft-py">
 <h1>Utility to_dft.py<a class="headerlink" href="#utility-to-dft-py" title="Permalink to this headline">¶</a></h1>
 <p>The present section details
 the Python3 utility to_dft.py, which enables us a DFT calculation by
@@ -636,7 +636,7 @@ in limited types of surface structures.</p>
 <p>This section gives a tutorial of to_dft.py with the Si(001)-(2x1) surface.
 The input and output files are available on
 the tool/todft/sample/Si001 directory.</p>
-<section id="prerequisites">
+<div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>The utility requires</p>
 <ul class="simple">
@@ -650,8 +650,8 @@ the tool/todft/sample/Si001 directory.</p>
 <li><p>Matplotlib</p></li>
 <li><p>tomli</p></li>
 </ul>
-</section>
-<section id="input-files">
+</div>
+<div class="section" id="input-files">
 <h2>Input files<a class="headerlink" href="#input-files" title="Permalink to this headline">¶</a></h2>
 <p>One should prepare an xyz-formatted structure file.
 An example is surf_Si001.xyz in the tool/todft/sample/Si001/ directory.</p>
@@ -707,7 +707,7 @@ Below is a brief description of the variables for each section.
 The section <code class="docutils literal notranslate"><span class="pre">H_term</span></code> is required,
 only if one would like to generate the hydrogen-terminated structure.
 If not, the section  <code class="docutils literal notranslate"><span class="pre">H_term</span></code> should not appear.</p>
-<section id="main-section">
+<div class="section" id="main-section">
 <h3><code class="docutils literal notranslate"><span class="pre">Main</span></code> section<a class="headerlink" href="#main-section" title="Permalink to this headline">¶</a></h3>
 <p>This section contains settings related to the parameters required for hydrogen termination.</p>
 <ul>
@@ -720,8 +720,8 @@ If not, the section  <code class="docutils literal notranslate"><span class="pre
 <p>Description: Header for output files (xyz and cif files)</p>
 </li>
 </ul>
-</section>
-<section id="main-param-section">
+</div>
+<div class="section" id="main-param-section">
 <h3><code class="docutils literal notranslate"><span class="pre">Main.Param</span></code> section<a class="headerlink" href="#main-param-section" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">z_margin</span></code></p>
@@ -733,8 +733,8 @@ If not, the section  <code class="docutils literal notranslate"><span class="pre
 <p>Description: Margin for tuning the size of the slab. If the z-coordinates of the atoms in the bottom and top layers are <code class="docutils literal notranslate"><span class="pre">z_min</span></code> , <code class="docutils literal notranslate"><span class="pre">z_max</span></code>, then the slab size is given by <code class="docutils literal notranslate"><span class="pre">z_max-z_min+slab_margin</span></code>.</p>
 </li>
 </ul>
-</section>
-<section id="main-lattice-section">
+</div>
+<div class="section" id="main-lattice-section">
 <h3><code class="docutils literal notranslate"><span class="pre">Main.lattice</span></code> section<a class="headerlink" href="#main-lattice-section" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">unit_vec</span></code></p>
@@ -742,8 +742,8 @@ If not, the section  <code class="docutils literal notranslate"><span class="pre
 <p>Description: Specify the lattice vectors (ex. <code class="docutils literal notranslate"><span class="pre">unit_vec</span> <span class="pre">=</span> <span class="pre">[[7.67932,</span> <span class="pre">0.00000,</span> <span class="pre">0.00000],</span> <span class="pre">[0.00000,</span> <span class="pre">3.83966,</span> <span class="pre">0.00000]]</span></code>).</p>
 </li>
 </ul>
-</section>
-<section id="h-term-section">
+</div>
+<div class="section" id="h-term-section">
 <h3><code class="docutils literal notranslate"><span class="pre">H_term</span></code> section<a class="headerlink" href="#h-term-section" title="Permalink to this headline">¶</a></h3>
 <p>This section enables us to generate the hydrogen-terminated structure.
 At the present code supports
@@ -764,8 +764,8 @@ with the distance to the next layer atoms adjusted to a tetrahedral structure
 <p>Description: The angle between the two vertex-H bonds of the tetrahedral structure (e.g. H-Si-H).</p>
 </li>
 </ul>
-</section>
-<section id="ase-section">
+</div>
+<div class="section" id="ase-section">
 <h3><code class="docutils literal notranslate"><span class="pre">ASE</span></code> section<a class="headerlink" href="#ase-section" title="Permalink to this headline">¶</a></h3>
 <p>This section specifies parameters related to <code class="docutils literal notranslate"><span class="pre">ASE</span></code>.</p>
 <ul>
@@ -782,20 +782,20 @@ with the distance to the next layer atoms adjusted to a tetrahedral structure
 <p>Description: Set the command used to run the solver.</p>
 </li>
 </ul>
-</section>
-<section id="solver-section">
+</div>
+<div class="section" id="solver-section">
 <h3><code class="docutils literal notranslate"><span class="pre">Solver</span></code> section<a class="headerlink" href="#solver-section" title="Permalink to this headline">¶</a></h3>
 <p>In this section, parameters related to <code class="docutils literal notranslate"><span class="pre">Solver</span></code> are specified.
 You will need to specify this if you want to perform first-principles calculations directly using ASE.
 Basically, the configuration is the same as the one specified in the input file of each solver.
 For example, in the case of QE, <code class="docutils literal notranslate"><span class="pre">Solver.control</span></code> contains the parameters to be set in the <code class="docutils literal notranslate"><span class="pre">control</span></code> section of QE. The required pseudopotential files written in <code class="docutils literal notranslate"><span class="pre">Solver.pseudo</span></code> section should be downloaded, for example, by the wget command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">Si</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="mf">.1.0.0</span><span class="o">.</span><span class="n">UPF</span>
-<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">H</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="mf">.1.0.0</span><span class="o">.</span><span class="n">UPF</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">Si</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="o">.</span><span class="mf">1.0</span><span class="o">.</span><span class="mf">0.</span><span class="n">UPF</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">H</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="o">.</span><span class="mf">1.0</span><span class="o">.</span><span class="mf">0.</span><span class="n">UPF</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="execution">
+</div>
+</div>
+<div class="section" id="execution">
 <h2>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h2>
 <p>The script to_dft.py is carried out by</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 to_dft.py input.toml
@@ -810,10 +810,16 @@ For example, in the case of QE, <code class="docutils literal notranslate"><span
 </ul>
 <p>The three files surf_Si001_output.xyz,
 surf_Si001_output.cif and espresso.pwi
-are those in the xyz format, the Crystallographic Information File (CIF) format and the input file of QE, respectively.
-The files in the xyz and CIF formats are useful for visualization and are not required for QE.
-If QE works properly, the output file of QE, espresso.pwo appears.
-If QE does not work properly, the output file espresso.pwo contains error messages.</p>
+are those in the xyz format,
+the Crystallographic Information File (CIF) format and
+the input file of QE, respectively.
+The files in the xyz and CIF formats
+are useful for visualization and
+are not required for QE.
+If QE works properly,
+the output file of QE, espresso.pwo appears.
+If QE does not work properly,
+the output file espresso.pwo contains error messages.</p>
 <p>Here, the calculated structure is
 the hydrogen-terminated structure;</p>
 <p><strong>surf_Si001_output.xyz</strong></p>
@@ -835,13 +841,13 @@ the hydrogen-terminated structure;</p>
 <span class="n">H</span>        <span class="mf">5.75949000</span>       <span class="mf">1.20862950</span>       <span class="mf">3.46707512</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="acknowledgements">
+</div>
+</div>
+<div class="section" id="acknowledgements">
 <h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h1>
 <p>We would like to express our thanks for the support of the &quot;<em>Project for advancement of software usability in materials science</em>&quot; of The Institute for Solid State Physics, The University of Tokyo.</p>
-</section>
-<section id="contact">
+</div>
+<div class="section" id="contact">
 <h1>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h1>
 <p>If you have any comments, questions, bug reports etc. about this utility,
 please contact to the following main developers by sending the e-mail (the address is shown below).</p>
@@ -850,7 +856,7 @@ please contact to the following main developers by sending the e-mail (the addre
 </pre></div>
 </div>
 <p>Please change <code class="docutils literal notranslate"><span class="pre">_at_</span></code> into <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, when you will send the e-mail.</p>
-</section>
+</div>
 
 
             <div class="clearer"></div>
@@ -939,7 +945,7 @@ please contact to the following main developers by sending the e-mail (the addre
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, SIM-TRHEPD-RHEED Developper Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
     </div>
   </body>
 </html>
