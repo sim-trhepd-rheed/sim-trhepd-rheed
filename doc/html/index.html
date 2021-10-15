@@ -626,7 +626,7 @@ where the bulk region consists of three bulk-unit repetitions.</p>
 <h1>Utility to_dft.py<a class="headerlink" href="#utility-to-dft-py" title="Permalink to this headline">¶</a></h1>
 <p>The present section details
 the Python3 utility to_dft.py, which enables us a DFT calculation by
-<a class="reference external" href="https://www.quantum-espresso.org/">Quantum Espresso (QE)</a> for the files in STR.</p>
+<a class="reference external" href="https://www.quantum-espresso.org/">Quantum ESPRESSO (QE)</a> for the files in STR.</p>
 <p>The utility generates
 the input file of QE from the xyz-formatted structure file.
 The utility can also run QE, if QE is installed.
@@ -693,11 +693,10 @@ An example is input.toml  in the tool/todft/sample/Si001 directory.</p>
 <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;mpirun -np 4 ./pw.x -in espresso.pwi &gt; espresso.pwo&quot;</span>
 <span class="p">[</span><span class="n">Solver</span><span class="p">]</span>
 <span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">control</span><span class="p">]</span>
-<span class="n">calculation</span><span class="o">=</span><span class="s1">&#39;bands&#39;</span> <span class="c1"># &#39;scf&#39;,&#39;realx&#39;,&#39;bands&#39;,...</span>
+<span class="n">calculation</span><span class="o">=</span><span class="s1">&#39;relax&#39;</span> <span class="c1"># &#39;scf&#39;,&#39;realx&#39;,&#39;bands&#39;,...</span>
 <span class="n">pseudo_dir</span><span class="o">=</span><span class="s1">&#39;./&#39;</span>     <span class="c1"># Pseudopotential directory</span>
 <span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">system</span><span class="p">]</span>
 <span class="n">ecutwfc</span> <span class="o">=</span> <span class="mf">20.0</span>        <span class="c1"># Cut-off energy in Ry</span>
-<span class="n">nbands</span><span class="o">=</span><span class="mi">33</span>           <span class="c1"># # of bands (only used in band structure calc</span>
 <span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">pseudo</span><span class="p">]</span>
 <span class="n">Si</span> <span class="o">=</span> <span class="s1">&#39;Si.pbe-n-kjpaw_psl.1.0.0.UPF&#39;</span>
 <span class="n">H</span> <span class="o">=</span> <span class="s1">&#39;H.pbe-kjpaw_psl.1.0.0.UPF&#39;</span>
@@ -749,7 +748,7 @@ If not, the section  <code class="docutils literal notranslate"><span class="pre
 <p>This section enables us to generate the hydrogen-terminated structure.
 At the present code supports
 the hydrogen-terminated structures
-only for the (001)-type and (111)-type slab of the diamond structure.
+for the present (001)-type slab of the diamond structure.
 The hydrogen-terminated models are generated in the following manner:
 The bottom layer atoms are removed, and H atoms are placed
 at the corresponding positions to create a model
