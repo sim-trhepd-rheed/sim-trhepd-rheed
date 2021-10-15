@@ -8,18 +8,17 @@ slab_margin = 10.0
 unit_vec = [[7.67932, 0.00000, 0.00000], [0.00000, 3.83966, 0.00000]]
 [H_term]
 r_SiH = 1.48 #angstrom
-theta = 109.5 #H-Si-H angle in degre
+theta = 109.5 #H-Si-H angle in degree
 [ASE]
 solver_name = "qe"
 kpts = [3,3,1]        # sampling k points (Monkhorst-Pack grid)
 command = "mpirun -np 4 ./pw.x -in espresso.pwi > espresso.pwo"
 [Solver]
 [Solver.control]
-calculation='scf' # 'scf','relax','bands',...
+calculation='relax' # 'scf','relax','bands',...
 pseudo_dir='./'     # Pseudopotential directory
 [Solver.system]
 ecutwfc = 20.0        # Cut-off energy in Ry
-nbands=33           # # of bands (only used in band structure calc
 [Solver.pseudo]
-Si = 'Si.pbe-mt_fhi.UPF'
-H = 'H.pbe-mt_fhi.UPF'
+Si = 'Si.pbe-n-kjpaw_psl.1.0.0.UPF'
+H = 'H.pbe-kjpaw_psl.1.0.0.UPF'
