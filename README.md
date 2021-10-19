@@ -2,13 +2,15 @@
 
 ## Overview
 
-The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1], if you use the software in a research paper. The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[2]. The present package contains Fortran codes in the src/ directory and Python3 scripts in the tool/ directory. The present README file is assumed to be built with gfortran in a standard Linux environment.
+The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1] (and [2], if possible), if you use the software in a research paper. The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[3]. The present package contains Fortran codes in the src/ directory and Python3 scripts in the tool/ directory. The present README file is assumed to be built with gfortran in a standard Linux environment.
 
 Refernce list
 
 [1] T. Hanada, H. Daimon, and S. Ino， Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(√3 × √3 )R30°-Al, -Ga, and -In surfaces,  Phys. Rev. B 51, 13320–13325 (1995).
 
-[2] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).
+[2] T. Hanada, Y. Motoyama, K. Yoshimi, T. Hoshi, sim-trhepd-rheed -- Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), preprint: https://arxiv.org/abs/2110.09477
+
+[3] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).
 
 ## Code preparation
 
