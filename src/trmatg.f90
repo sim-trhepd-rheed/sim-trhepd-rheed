@@ -13,6 +13,7 @@
       complex(8) :: ph,ph2,tau,rou,x1,x2,x3, x4
       real(8) :: eig(nb), s,r
       integer :: nbm2, i,j,icom, i2,j2, it,k
+      real(8) :: rwork(2*nb) ! work array for zgeev
 
       nbm2=nbm+nbm
         if (nb == 1) then
@@ -29,7 +30,7 @@
           end do
 ! nb >= 2
           call zgeev('n','v',nb,t1,nbm2,t2(nb+1,nb),t2(1,nb+1) &
-                  ,nbm2,t2,nbm2,t3,nbm2*nbm2,t1(1,nb+1),icom)
+                  ,nbm2,t2,nbm2,t3,nbm2*nbm2,rwork,icom)
           if (icom /= 0) write (*,*) ' zgeev failed ',icom
         endif
 !----------transfer matrix of 1 slice----------
