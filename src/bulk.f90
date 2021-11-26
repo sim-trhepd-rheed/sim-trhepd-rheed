@@ -6,7 +6,7 @@
 !*******************************************************************
        subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
                   ,epsb,ngr,nbg,ih,ik,nh,nk,ml &
-                  ,dx,dy,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn)
+                  ,dx,dy,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn,t_o)
         implicit none
         complex(8) :: v(nv,ns),vi(nv,ns)
         real(8) :: dz,epsb,dx,dy,wn,ghx,ghy,gky,azi,daz,gi,dg
@@ -19,7 +19,9 @@
         real(8) :: az,caz,saz,ga,cga,wnx,wny,wgx,wgy,s,pih,pik,rmax,r2,rat
         integer :: nbgm2,nrep1,nrep2,irep1,irep2,ibas,igr,nbf,nbf2,i,i2,j,j2,k,l
         real(8), parameter :: pi2=atan(1d0)*8d0
-
+        logical :: t_o ! text output 
+        character(len=102400) :: str_wrk  ! work array
+!
         nbgm2=nbgm+nbgm
         if (ng > naz) then
           nrep1=naz
@@ -133,6 +135,15 @@
 !----------output----------
         if (iprn == 1) write (*,*) l,' layers'
         write (1) ((t4(i,j),i=1,nbf),j=1,nbf)
+!       if (t_o) write(11,*) ((t4(i,j),i=1,nbf),j=1,nbf)
+        if (t_o) then
+          do j=1,nbf
+            do i=1,nbf
+              write (str_wrk,*) t4(i,j)
+              write (11,'(a)') trim(str_wrk)
+            enddo
+          enddo
+        endif
         ibas=ibas+nbf
       end do ! igr=1,ngr
       end do ! irep2=1,nrep2
