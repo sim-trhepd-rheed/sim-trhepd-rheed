@@ -7,8 +7,9 @@
 ! max # of potential fourier components : nvm
 ! max # of unit layers : mlm
 !*******************************************************************
-        subroutine bulkio(inegpos,idiag,iprn)
+        subroutine bulkio(inegpos,idiag,iprn,t_o)
         implicit none
+        logical :: t_o ! text_output 
         integer, parameter :: mlm=1000, mab=6
         complex(8), dimension(:,:),allocatable :: v,vi
         real(8), dimension(:,:,:),allocatable :: asf
@@ -27,6 +28,8 @@
         integer :: nbt,ibt,nabr,nabi,iabr,iabp,iabe,idiag
         integer :: iprn, idom,iz,ichg, i,j,k
         real(8), parameter :: eps=1d-20, pi=atan(1d0)*4d0, rad=pi/180d0
+        character(len=102400) :: str_wrk  ! work array
+!        
 !----------input(3)----------
 ! beam parameters
         isym=0
@@ -120,7 +123,38 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
           ns=int(cc/dz)+1
           dz=cc/ns
         if (ns < 2) return
-!----------output(1)----------
+
+!----------output: binary (and text) file ----------
+        
+        if (t_o) then 
+           write (str_wrk,*) ndom
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) inegpos,isym,nh,nk,iabr,iabp,iabe,nabr,nabi,idiag
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) (nb(i),rdom(i),i=1,ndom)
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) (ih(i),ik(i),i=1,nbt)
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) be,azi,daz,naz,gi,dg,ng
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) tem,dz,ml,epsb
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) nsg,mp,aa,bb,gam,cc,dx,dy,zoffset
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) nelm,natm
+           write (11,'(a)') trim(str_wrk)
+           do i=1,nelm
+              write (str_wrk,*) a(1:nabr+nabi,i),b(1:nabr+nabi,i)
+              write (11,'(a)') trim(str_wrk)
+              write (str_wrk,*) dth(i),dtk(i),dtz(i),elm(i),dchg(i)
+              write (11,'(a)') trim(str_wrk)
+           end do
+           do i=1,natm
+              write (str_wrk,*) ielm(i),ocr(i),x(i),y(i),z(i)
+              write (11,'(a)') trim(str_wrk)
+           end do
+        endif
+        
         write (1) ndom
         write (1) inegpos,isym,nh,nk,iabr,iabp,iabe,nabr,nabi,idiag
         write (1) (nb(i),rdom(i),i=1,ndom)
@@ -129,14 +163,14 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
         write (1) tem,dz,ml,epsb
         write (1) nsg,mp,aa,bb,gam,cc,dx,dy,zoffset
         write (1) nelm,natm
-
         do i=1,nelm
-          write (1) a(1:nabr+nabi,i),b(1:nabr+nabi,i)
-          write (1) dth(i),dtk(i),dtz(i),elm(i),dchg(i)
+           write (1) a(1:nabr+nabi,i),b(1:nabr+nabi,i)
+           write (1) dth(i),dtk(i),dtz(i),elm(i),dchg(i)
         end do
         do i=1,natm
-          write (1) ielm(i),ocr(i),x(i),y(i),z(i)
+           write (1) ielm(i),ocr(i),x(i),y(i),z(i)
         end do
+           
 !-----------energy correction of atomic scattering factor--------
         call asfcrr(be,wn,nelm,mab,nabr,nabi,a,b,c,dchg,dth,dtk,dtz,elm &
                    ,tem,aa*bb*sin(gam))
@@ -166,7 +200,17 @@ allocate (igh(nvm)); allocate (igk(nvm))
         call blkghk(ngr,nbg,nvm,nv,igh,igk,nbgm,nb(idom),ih(ibt),ik(ibt),iv)
 allocate (asf(nv,mab,nelm)); allocate (Ghk(nv))
         call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,mab,nabr,nabi,a,c,asf,dth,dtk,Ghk)
-!----------output(1)----------
+!----------output: binary (and text)  file----------
+        if (t_o) then
+           write (str_wrk,*) (iord(i),i=1,nb(idom))
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) ngr,nv
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) (nbg(i),i=1,ngr)
+           write (11,'(a)') trim(str_wrk)
+           write (str_wrk,*) (igh(i),igk(i),i=1,nv)
+           write (11,'(a)') trim(str_wrk)
+        endif
         write (1) (iord(i),i=1,nb(idom))
         write (1) ngr,nv
         write (1) (nbg(i),i=1,ngr)
@@ -190,7 +234,7 @@ allocate (v(nv,ns)); allocate (vi(nv,ns))
 !-----------incident beam rocking-----------
        call blkref(nv,nbgm,nb(idom),ns,v,vi,iv,dz,epsb,ngr,nbg,ih(ibt),ik(ibt) &
                   ,nh,nk,ml,dx,dy,wn,ghx,ghy,gky &
-                  ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn)
+                  ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn,t_o)
 deallocate (vi); deallocate (v)
 deallocate (gk); deallocate (gh)
 deallocate (Ghk); deallocate (asf)
