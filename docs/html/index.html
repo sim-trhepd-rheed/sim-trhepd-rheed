@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>sim-trhepd-rheed documentation &#8212; SIM-TRHEPD-RHEED 1.0 documentation  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">SIM-TRHEPD-RHEED 1.0 documentation  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">sim-trhepd-rheed documentation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sim-trhepd-rheed-documentation">
+<h1>sim-trhepd-rheed documentation<a class="headerlink" href="#sim-trhepd-rheed-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="chapter02"></span></section>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The software package SIM-TRHEPD-RHEED (STR) is
+a simulator for total-reflection high-energy positron diffraction (TRHEPD)
+and reflection high-energy electron diffraction (RHEED).
+Please cite Ref. [1] and [2], if you use the software in a research paper.</p>
+<p>The software was written originally by Takashi Hanada [1]
+and is based on the theory written in Ref.[3].
+The present package, STR v. 1.0 [2], was developed
+with the support of “Project for advancement of software usability in materials science” of
+The Institute for Solid State Physics, The University of Tokyo.</p>
+<p>The package contains Fortran codes and Python3 scripts.
+A standard Linux environment is assumed throughout the present document.</p>
+<p>[1] T. Hanada, H. Daimon, and S. Ino, Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R30°-Al, -Ga, and -In surfaces, Phys. Rev. B 51, 13320–13325 (1995).</p>
+<p>[2] T. Hanada, Y. Motoyama, K. Yoshimi and T. Hoshi, sim-trhepd-rheed – Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), Preprint: <a class="reference external" href="https://arxiv.org/abs/2110.09477">https://arxiv.org/abs/2110.09477</a></p>
+<p>[3] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This package is distributed under GNU General Public License version 3 (GPL v3).</p>
+</section>
+</section>
+<section id="installation">
+<span id="chapter03"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<section id="download-and-installation">
+<h2>Download and installation<a class="headerlink" href="#download-and-installation" title="Permalink to this headline">¶</a></h2>
+<p>Here, a standard linux OS with a Fortran90 and Python3 environment is assumed.</p>
+<p>One can download the source code with git command in a working directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone http://github.com/sim-trhepd-rheed/sim-trhepd-rheed
+</pre></div>
+</div>
+<p>and the following directory will be generated</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">-</span><span class="n">trhepd</span><span class="o">-</span><span class="n">rheed</span>
+</pre></div>
+</div>
+<p>In the sim-trhepd-rheed directory, execute the command below in order</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd src/
+$ make
+</pre></div>
+</div>
+<p>and the following executable files will be generated.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bulk</span><span class="o">.</span><span class="n">exe</span>
+<span class="n">surf</span><span class="o">.</span><span class="n">exe</span>
+<span class="n">xyz</span><span class="o">.</span><span class="n">exe</span>
+<span class="n">potcalc</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<p>Note: The source codes of the numerical calculation library LAPACK (zgeev.f, zgeevb.f)
+are stored in the src/ directory and are also compiled.
+If LAPACK is preinstalled in your computer, you can use preinstalled LAPACK
+by editing the src/Makefile file properly.</p>
+<p>In addition, Python3 scripts</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">script</span><span class="o">/</span><span class="n">make_convolution</span><span class="o">.</span><span class="n">py</span>
+<span class="n">tool</span><span class="o">/</span><span class="n">todft</span><span class="o">/</span><span class="n">to_dft</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>are also prepared.
+The required Python modules for the scripts will be explained later.</p>
+<p>Set the environmental variables properly so that you can run the binary files and the srcipts.</p>
+</section>
+<section id="switching-between-trhepd-and-rheed-modes">
+<h2>Switching between TRHEPD and RHEED modes<a class="headerlink" href="#switching-between-trhepd-and-rheed-modes" title="Permalink to this headline">¶</a></h2>
+<p>The default source code of STR
+is written for TRHEPD experiment.
+If one would like to use STR for RHEED experiment,
+one should modify the line</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ep</span><span class="o">=</span><span class="s1">&#39;P&#39;</span>
+</pre></div>
+</div>
+<p>into</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ep</span><span class="o">=</span><span class="s1">&#39;E&#39;</span>
+</pre></div>
+</div>
+<p>in bulkm.f90, surfm.f90, U0.f90, before the compilation.
+Hereafter we explain the TRHEPD case.</p>
+</section>
+</section>
+<section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<section id="brief-explanation">
+<h2>Brief explanation<a class="headerlink" href="#brief-explanation" title="Permalink to this headline">¶</a></h2>
+<p>In STR, the partial differential equation (PDE) of dynamical quantum diffraction
+theory</p>
+<div class="math">
+<p><img src="_images/math/278823966e88bd50aad1913344951451834316a9.png" alt="\left( \Delta + K^2 -q  U(\bf{r})  \right) \Psi(\bf{r}) =   0,"/></p>
+</div><p>is solved numerically to obtain the intensity <img class="math" src="_images/math/7c00c649576f7c6b709e960a3a722715d895747c.png" alt="I^{\rm (cal)}_{hk}(\theta)"/> where the indices <img class="math" src="_images/math/70460911de670313d29e670a8f0fa4b2b0e44747.png" alt="(h, k)"/> specify the surface reciprocal lattice vector. <img class="math" src="_images/math/52ddc0cde6d632f631533173562fe3ca375b1f32.png" alt="K"/> is a wave number in vacuum in a two-dimensional periodic potential of crystal surface. The parameter <img class="math" src="_images/math/a5fa84b363f309ebc8fe7db38304541732c7de9a.png" alt="q"/> is the sign of the particle (+/- for positron/electron). The crystal potential  <img class="math" src="_images/math/58e36845d05694f6179d9f60b5c024cf0bf718ae.png" alt="q U(\bf{r})"/> , which is a complex function owing to the inelastic effect, is determined by the lattice parameters, the atomic positions <img class="math" src="_images/math/43c894e9617cadce65240f2a6d8fde95a75f8a17.png" alt="\bf{r}_n"/> of <img class="math" src="_images/math/5a939c5280da7202ca4531f175a7780ad5e1f80a.png" alt="n"/>-th atom in a unit mesh, and the atomic scattering factors corrected by mean-square displacements.
+The database of the atomic scattering factors is implemented in STR among the atomic numbers of <img class="math" src="_images/math/95f028ab2b20b895fa12d986e0d9f40f7b6e52d3.png" alt="Z"/> =1 (H), 2 (He), …, 98 (Cf).
+The calculation procedure is decomposed into three stages as explained in Ref.[2].
+At the first stage, the application bulk.exe is executed
+so as to solve the PDE in the bulk region.
+The required input file is bulk.txt
+so as to set the atom positions in the bulk region.
+The output file is bulkP.b, which is required in the next stage.
+At the second stage, the application surf.exe is executed
+so as to solve the PDE in the surface region.
+The required input file is surf.txt
+so as to set the atom positions in the surface region.
+The output file is surf-bulkP.s that contains
+the rocking curve data.
+At the third stage,
+the convolution procedure is executed
+by make_convolution.py.
+The details of both input and output files are explained in Example 1.
+We also show the schematic figure of TRHEPD and RHEED experiments below.</p>
+<a class="reference internal image-reference" href="_images/TRHEPD_overview.pdf"><img alt="Schematic figure of TRHEPD and RHEED experiments." src="_images/TRHEPD_overview.pdf" /></a>
+</section>
+<section id="list-of-the-two-dimensional-space-groups">
+<h2>List of the two-dimensional space groups<a class="headerlink" href="#list-of-the-two-dimensional-space-groups" title="Permalink to this headline">¶</a></h2>
+<p>In the input file bulk.txt and surf.txt,
+one can specify the bulk and surface structure
+with a two-dimensional space group.
+The index NSG specifies the two-dimensional space group
+and are shown in the following table</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>NSG</p></th>
+<th class="head"><p>symmetry</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>p1</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>p211</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>p1m1</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>p1g1</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>c1m1</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>p2mm</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>p2mg</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>p2gg</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>c2mm</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>p4</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>p4mm</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>p4gm</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>p3</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>p3m1</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>p31m</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>p6</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>p6mm</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom">
+<h1>Example 1: Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R30 <img class="math" src="_images/math/aa7ccbffb40dcc75237a404052776566b273623b.png" alt="^{\circ}"/> surface with a T4-site Al adatom<a class="headerlink" href="#example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom" title="Permalink to this headline">¶</a></h1>
+<p>The present package contains two examples in the sample/ directory for tutorial.
+In the code,
+the z-axis is assumed to be perpendicular to the surface and
+the region <img class="math" src="_images/math/f33a0ec787f1583f70da2dc69f5b3b3af5a39e4f.png" alt="z \rightarrow \infty"/> is the vacuum region.
+The vectors <img class="math" src="_images/math/b3e65e3b6408fcfa00452530b73f55d1755f9965.png" alt="a"/> and <img class="math" src="_images/math/68c7c8c65602677ab56cf7fd88002023f0edc575.png" alt="b"/> are defined
+as the bulk 1 x 1 unit-cell vectors perpendicular to the z-axis.</p>
+<p>The first example is the TRHEPD data for
+Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R <img class="math" src="_images/math/aa3e4de58095898df09b64df32e2c2133d027008.png" alt="30^\circ"/> surface with a T4-site Al adatom
+under the many-beam condition.
+The present section details the typical usage of STR.
+The input data files, bulk.txt and surf.txt,
+are stored in the sample/T4Al_on_Si_111/ directory.
+The output files are stored
+in the sample/T4Al_on_Si_111/output/ directory.</p>
+<section id="first-stage-bulk-part-calculation">
+<h2>First stage: bulk part calculation<a class="headerlink" href="#first-stage-bulk-part-calculation" title="Permalink to this headline">¶</a></h2>
+<p>The bulk part is the crystalline silicon and
+the input file bulk.txt is as follows</p>
+<p><strong>bulk.txt</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">01</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span>    <span class="p">,</span><span class="n">NH</span><span class="p">,</span><span class="n">NK</span><span class="p">,</span><span class="n">NDOM</span><span class="p">,</span>  <span class="o">-----</span> <span class="n">Si</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span> <span class="n">bulk</span>
+<span class="mi">02</span><span class="p">:</span> <span class="mi">13</span>       <span class="p">,</span><span class="n">NB</span>
+<span class="mi">03</span><span class="p">:</span> <span class="mi">0</span>        <span class="p">,</span><span class="n">RDOM</span>
+<span class="mi">04</span><span class="p">:</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+     <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span>  <span class="p">,</span> <span class="p">(</span><span class="n">IH</span><span class="p">(</span><span class="n">I</span><span class="p">),</span><span class="n">IK</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
+<span class="mi">05</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mf">0.1</span>  <span class="p">,</span><span class="n">BE</span><span class="p">,</span><span class="n">AZI</span><span class="p">,</span><span class="n">AZF</span><span class="p">,</span><span class="n">DAZ</span><span class="p">,</span><span class="n">GI</span><span class="p">,</span><span class="n">GF</span><span class="p">,</span><span class="n">DG</span>
+<span class="mi">06</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span><span class="mi">100</span>  <span class="p">,</span><span class="n">DZ</span><span class="p">,</span><span class="n">ML</span>
+<span class="mi">07</span><span class="p">:</span> <span class="mi">1</span>      <span class="p">,</span><span class="n">NELM</span>
+<span class="mi">14</span><span class="p">,</span> <span class="mf">1.091</span><span class="p">,</span> <span class="mf">0.1027</span>          <span class="p">,</span> <span class="n">Si</span> <span class="n">Z</span><span class="p">,</span><span class="n">da1</span><span class="p">,</span><span class="n">sap</span>
+<span class="mi">09</span><span class="p">:</span><span class="mf">0.4782</span><span class="p">,</span> <span class="mf">0.4782</span><span class="p">,</span> <span class="mf">0.4782</span>     <span class="p">,</span><span class="n">BH</span><span class="p">,</span><span class="n">BK</span><span class="p">,</span><span class="n">BZ</span>
+<span class="mi">10</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="mf">3.83966</span><span class="p">,</span> <span class="mf">3.83966</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mf">3.13507</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.333333</span><span class="p">,</span> <span class="mf">0.333333</span><span class="p">,</span>   <span class="n">NSG</span><span class="p">,</span><span class="n">AA</span><span class="p">,</span><span class="n">BB</span><span class="p">,</span><span class="n">GAM</span><span class="p">,</span><span class="n">CC</span><span class="p">,</span><span class="n">DX</span><span class="p">,</span><span class="n">DY</span>
+<span class="mi">11</span><span class="p">:</span> <span class="mi">2</span>      <span class="p">,</span> <span class="n">NATM</span>
+<span class="mi">12</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.17565</span>     <span class="p">,</span><span class="n">IELM</span><span class="p">,</span><span class="n">ocr</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span>
+<span class="mi">13</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.333333</span><span class="p">,</span><span class="mf">0.333333</span><span class="p">,</span> <span class="mf">1.95942</span>   <span class="p">,</span><span class="n">IELM</span><span class="p">,</span><span class="n">ocr</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span>
+</pre></div>
+</div>
+<p>Hereafter, the line number of the text file is indicated at the head of each line.For example,
+the real fourth line is ‘-6,-6,-5,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0, 1,1,2,2,3,3,4,4,5,5,6,6  ,(IH(I),IK(I))’.</p>
+<p>The parameters are explained below</p>
+<p><strong>NH, NK, NDOM</strong></p>
+<ul>
+<li><p>NH, NK</p>
+<p>The parameters specify the beam indices used in the calculation. With a set of integer parameters,
+IH and IK, the beam component  <img class="math" src="_images/math/47724d8f286594efa6871cf8384a915044465a30.png" alt="(h, k)="/> (IH / NH, IK / NK) is included in the calculation, where
+the unit is bulk 1 × 1 reciprocal lattice. The unit cell of the reconstructed surface structure is described in the input data for surf.exe (surf.txt)</p>
+</li>
+<li><p>NDOM</p>
+<p>The number of domains and is 1, unless a multi-domain system is calculated.
+The possible maximum number of domains is six. (NDOM <img class="math" src="_images/math/e20e8331e402ef72312624aa922945083d43d6d8.png" alt="\le 6"/>).
+Multiple-domain systems (NDOM &gt; 1) are supported within the cases in which
+the domains form the same reconstructed surface with different orientations and their intensities must be summed.
+Moreover a multiple-domain system is supported, only if the two lattice vectors have the same length ( <img class="math" src="_images/math/be000a4ea587ae1bc9785bcf819612d9b148a6af.png" alt="a=b"/> ) and
+the angle between them (<img class="math" src="_images/math/34d137cf01c787ecda732761c3f95b0f65a6c3e9.png" alt="\gamma"/>) satisfies <img class="math" src="_images/math/e2b5ea350d6dea9900d575610afe0bc73919dc85.png" alt="\gamma =90^\circ"/> or <img class="math" src="_images/math/a07b68b3cdda51d62b7cdc8d69c78e85029aaea7.png" alt="\gamma =120^\circ"/>.</p>
+</li>
+</ul>
+<p><strong>NB(I)</strong></p>
+<p>The parameter NB(I) is the number of beams in domain I for I = 1, .., NDOM.</p>
+<p><strong>RDOM(I)</strong></p>
+<p>The parameter RDOM(I) is an azimuth shift angle <img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> in domain I and should be written for I = 1 to NDOM in degree unit.
+All <img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> in domain I are shifted by RDOM(I) from the default values.
+In the case of <img class="math" src="_images/math/e2b5ea350d6dea9900d575610afe0bc73919dc85.png" alt="\gamma =90^\circ"/>,  RDOM(I) is allowed as (integer) x <img class="math" src="_images/math/a12be91d4eca50e5af2d9b3391db78c39266fb5d.png" alt="90^\circ"/>.
+In the case of <img class="math" src="_images/math/a07b68b3cdda51d62b7cdc8d69c78e85029aaea7.png" alt="\gamma =120^\circ"/>,  RDOM(I) is allowed as (integer) x <img class="math" src="_images/math/c1d6babe8cde1e5ed047d53265ae7d3f38155675.png" alt="60^\circ"/>.</p>
+<p><strong>IH(J, I), IK(J, I)</strong></p>
+<p>Repeat the following line inside the curly bracket for I = 1, .., NDOM.</p>
+<div class="line-block">
+<div class="line">{</div>
+<div class="line">The indices IH (J, I) and IK (J, I) of the beam indices for J = 1, .., NB(I) in domain I</div>
+<div class="line">}</div>
+</div>
+<p><strong>BE, AZI, AZF, DAZ, GI, GF, DG</strong></p>
+<ul>
+<li><p>BE</p>
+<p>Beam energy (unit: KeV)</p>
+</li>
+<li><p>AZI</p>
+<p>Initial (minimum) azimuthal angle <img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> (unit: degree)</p>
+</li>
+<li><p>AZF</p>
+<p>Final (maximum) <img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> (unit: degree)</p>
+</li>
+<li><p>DAZ</p>
+<p><img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> interval (unit: degree)</p>
+<p>Note: <img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> is zero, if the direction is along the a-axis direction of the bulk.
+<img class="math" src="_images/math/ed710ddac707fcbc540bfe7b354ca2d900f0faa0.png" alt="\varphi"/> is positive, if it rotates counterclockwise from the viewpoint of the vacuum side.</p>
+</li>
+<li><p>GI</p>
+<p>Initial (minimum) glancing angle <img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> (unit: degree).</p>
+</li>
+<li><p>GF</p>
+<p>Final (maximum) <img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> (unit: degree).</p>
+</li>
+<li><p>DG</p>
+<p><img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> interval (unit: degree).</p>
+</li>
+</ul>
+<p><strong>DZ, ML</strong></p>
+<ul>
+<li><p>DZ</p>
+<p>Slice thickness or the mesh interval in the z-direction (unit: <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/> ).  Typically, DZ is 0.1~0.01.</p>
+</li>
+<li><p>ML</p>
+<p>The maximum number of the bulk layers that contribute to the reflection effect.
+Here the layer unit length is CC defined below. Typically, ML is ~ 100.</p>
+</li>
+</ul>
+<p><strong>NELM</strong></p>
+<p>The number of atom species in the bulk region.
+In the present context, one ‘atom species’ indicates the parameter set of the scattering properties and may be not identical to chemical species.</p>
+<p>Repeat the following line inside the curly bracket for I = 1, .., NELM.</p>
+<p>{</p>
+<p><strong>iz, da1, sap</strong></p>
+<ul>
+<li><p>iz</p>
+<p>Atomic number.</p>
+</li>
+<li><p>da1</p>
+<p>The correction parameter in the real part of the atomic scattering factor. da1 is subtracted from Doyle and Turner’s parameter <img class="math" src="_images/math/e6666b858550f2017cd1f0eef04177064c79df44.png" alt="a_1"/> or Peng’s parameter <img class="math" src="_images/math/11153d0e12dad9577151cc829b088c5355e35aec.png" alt="a_4"/>.Typically, da1 is ~ 1.0 but must be smaller than <img class="math" src="_images/math/e6666b858550f2017cd1f0eef04177064c79df44.png" alt="a_1"/> or <img class="math" src="_images/math/11153d0e12dad9577151cc829b088c5355e35aec.png" alt="a_4"/>. See P.A. Doyle and P.S. Turner: Acta Cryst. A24 (1968) 390, L. -M. Peng, Micron 30 (1999) 625 and so on.</p>
+</li>
+<li><p>sap</p>
+<p>The scale parameter in the imaginary part of atomic scattering factor.
+The imaginary part is sap times as large as the real part.
+Typically, sap is 0.12 to 0.15 for BE = 10 KeV and is approximately proportional  to  BE <img class="math" src="_images/math/a49ce506edc1afab1b01020fd5af6ead087ae1b0.png" alt="^{-1/2}"/>. See G. Radi: Acta Cryst. A26 (1970) 41.</p>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><strong>BH(I), BK(I), BZ(I)</strong></div>
+<div class="line">The components of B = 8 <img class="math" src="_images/math/323de834d1d4c7f827dc345e6fd1060cc8153df8.png" alt="\pi^2 \langle u^2 \rangle (\AA^2)"/>, where <img class="math" src="_images/math/6511e55b3760701f484156ba8497dbfc47b3b852.png" alt="\langle u^2 \rangle"/> is the mean square of vibration displacements.</div>
+</div>
+<ul>
+<li><p>BH(I)//<img class="math" src="_images/math/194b5b71dc75f37381ac471027ab7614e804b31b.png" alt="\bm{a}^\ast"/></p>
+<p>Surface component in the direction of <img class="math" src="_images/math/194b5b71dc75f37381ac471027ab7614e804b31b.png" alt="\bm{a}^\ast"/>,  the reciprocal lattice vector of <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/></p>
+</li>
+<li><p>BK(I)//<img class="math" src="_images/math/7b2fa34f30c3bf4dcda1516a2613d5ecc6bf232a.png" alt="\bm{b}^\ast"/></p>
+<p>Surface component in the direction of <img class="math" src="_images/math/7b2fa34f30c3bf4dcda1516a2613d5ecc6bf232a.png" alt="\bm{b}^\ast"/>,  the reciprocal lattice vector of <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/>. <img class="math" src="_images/math/bb41db4c75ef032a3136767ed1ca393295d222b6.png" alt="B_{11} = \text{BH}"/>, <img class="math" src="_images/math/f438cb8cc62e1a763b163c88c1c53419f3bde925.png" alt="B_{22} = \text{BK}"/>, and <img class="math" src="_images/math/ca7c978970910a7cb204c409407973307bc25e5f.png" alt="B_{12} = -(\text{BH}\times\text{BK})^{1/2} \cos(\text{GAM})"/>. In the present code, BH = BK is required in most cases.</p>
+</li>
+<li><p>BZ(I)</p>
+<p>The z-axis component. <img class="math" src="_images/math/badda45021fbdacce6d88ee2a83e771d6f644b2f.png" alt="B_{33} = \text{BZ}"/>, <img class="math" src="_images/math/ce42afba3debf8e301d00253c321794b35f927ce.png" alt="B_{13} = 0"/>, and <img class="math" src="_images/math/7a8fa421888632bca86086a1e8203545c2f7e4e9.png" alt="B_{23} = 0"/></p>
+</li>
+</ul>
+<div class="line-block">
+<div class="line">}</div>
+</div>
+<p><strong>NSG, AA, BB, GAM, CC, DX, DY</strong></p>
+<ul>
+<li><p>NSG</p>
+<p>The index of the two-dimensional space groups of bulk 1×1 structure. NSG =  1, 2, .., 16 or 17.
+See Sec. ‘List of the two-Dimensional space Groups’.</p>
+</li>
+<li><p>AA</p>
+<p>The length of the primitive translation vector  <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> ( <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/> )</p>
+</li>
+<li><p>BB</p>
+<p>The length of the primitive translation vector  <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> ( <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/> )</p>
+</li>
+<li><p>GAM</p>
+<p>The angle <img class="math" src="_images/math/34d137cf01c787ecda732761c3f95b0f65a6c3e9.png" alt="\gamma"/> between the two vectors  <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> and <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> (degree)</p>
+</li>
+<li><p>CC</p>
+<p>The unit layer thickness perpendicular to the surface ( <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/> ).
+Note that the unit layer may be not that for the periodic cell but that for a stacking structure.
+For example, the periodic cell of zinc-blend (111) surface is the stacked three-layer (‘ABC’) structure
+and the unit layer can be set to be one layer of the three.</p>
+</li>
+<li><p>DX, DY</p>
+<p>For atoms which are placed in the  upper layer on the distance CC,
+atoms move move DX <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> + DY <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> in the in-plane direction.
+For example, in the case of the zinc-blende (111) plane,
+instead of giving the atomic coordinates of three layers of ABC,
+give the atomic coordinates of one layer (unit thickness is CC), and you can shift them 1/3 by using DX and DY.</p>
+</li>
+</ul>
+<p><strong>NATM</strong></p>
+<blockquote>
+<div><p>The number of the independent atoms in the 1 x 1 unit cell, according to the symmetry corresponding to NSG.</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">—- Repeat the following line inside the curly bracket for I = 1, .., NATM —-</div>
+<div class="line">{</div>
+</div>
+<p><strong>IELM(I), ocr(I), X(I), Y(I), Z(I)</strong></p>
+<ul>
+<li><p>IELM(I)</p>
+<p>The atom-species index IELM(I) = 1, 2, .. or NELM.</p>
+</li>
+<li><p>ocr(I)</p>
+<p>The occupation ratio of atom I.</p>
+</li>
+<li><p>X(I)</p>
+<p>The coordinate of atom I in the direction of <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> (unit: AA).</p>
+</li>
+<li><p>Y(I)</p>
+<p>The coordinate of atom I in the direction of <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> (unit: BB).</p>
+<p>In order to correctly perform symmetry operations in a 2D plane, X- and Y-coordinates of atoms on a rotational symmetry axis perpendicular to the surface or on a mirror plane perpendicular to the surface should have an accuracy of 4 digits or more after the decimal point (the error should be  0.0001 or less).  If it deviates more than that, it is determined that the position has low symmetry, and the number of expansions to the symmetric position in the plane becomes excessive. Also, since an atoms on a mirror plane must move along the plane and X- and Y-coordinates cannot change independently, take care to optimize the positions.</p>
+</li>
+<li><p>Z(I)</p>
+<p>The z-axis coordinate of atom I (unit:  <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/>). The values should satisfy <img class="math" src="_images/math/fc58474fa5ff83952d2e06f8e2b13356fb950b52.png" alt="0 \leq"/>   z(i) &lt;CC.
+Note that the scattering potential for <img class="math" src="_images/math/120537343da1a94bb456d9d29c99c64b58267d3e.png" alt="0 \leq z &lt; CC"/> is calculated with the contribution
+from the atoms the lower unit  <img class="math" src="_images/math/53f348e01e1d88233f7fc59932865fd9d3a1dc67.png" alt="-CC \leq z &lt; 0"/> and the upper unit <img class="math" src="_images/math/27eedc8e7d524e8a7234f5b237e630d077074b44.png" alt="CC \leq z &lt; 2*CC"/>.</p>
+</li>
+</ul>
+<p>The bulk part calculation is carried out by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bulk.exe
+</pre></div>
+</div>
+<p>and the output file bulkP.b, a binary file, appears.
+The output file is required in the surface part calculation
+explained in the next subsubsection.</p>
+</section>
+<section id="second-stage-surface-part-calculation">
+<h2>Second stage: surface part calculation<a class="headerlink" href="#second-stage-surface-part-calculation" title="Permalink to this headline">¶</a></h2>
+<p>The surface part is described in the input file surf.txt as follows:</p>
+<p><strong>surf.txt</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">01</span><span class="p">:</span> <span class="mi">3</span>      <span class="p">,</span><span class="n">NELM</span><span class="p">,</span>  <span class="o">--------</span> <span class="n">Si</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span><span class="o">-</span><span class="n">root3</span> <span class="n">x</span> <span class="n">root3</span><span class="o">-</span><span class="n">R30</span><span class="o">-</span><span class="n">Al</span> <span class="n">T4</span>
+<span class="mi">02</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8458</span><span class="p">,</span> <span class="mf">0.03746</span>        <span class="p">,</span> <span class="n">Al</span> <span class="n">Z</span><span class="p">,</span><span class="n">da1</span><span class="p">,</span><span class="n">sap</span>
+<span class="mi">03</span><span class="p">:</span> <span class="mf">0.7173</span><span class="p">,</span> <span class="mf">0.7173</span><span class="p">,</span> <span class="mf">0.7173</span>     <span class="p">,</span><span class="n">BH</span><span class="p">,</span><span class="n">BK</span><span class="p">,</span><span class="n">BZ</span>
+<span class="mi">04</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="mf">1.091</span><span class="p">,</span> <span class="mf">0.1027</span>      <span class="p">,</span> <span class="n">Si</span> <span class="n">Z</span><span class="p">,</span><span class="n">da1</span><span class="p">,</span><span class="n">sap</span>
+<span class="mi">05</span><span class="p">:</span> <span class="mf">0.7173</span><span class="p">,</span> <span class="mf">0.7173</span><span class="p">,</span> <span class="mf">0.7173</span>    <span class="p">,</span><span class="n">BH</span><span class="p">,</span><span class="n">BK</span><span class="p">,</span><span class="n">BZ</span>
+<span class="mi">06</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="mf">1.091</span><span class="p">,</span> <span class="mf">0.1027</span>      <span class="p">,</span> <span class="n">Si</span> <span class="n">Z</span><span class="p">,</span><span class="n">da1</span><span class="p">,</span><span class="n">sap</span>
+<span class="mi">07</span><span class="p">:</span> <span class="mf">0.4782</span><span class="p">,</span> <span class="mf">0.4782</span><span class="p">,</span> <span class="mf">0.4782</span>     <span class="p">,</span><span class="n">BH</span><span class="p">,</span><span class="n">BK</span><span class="p">,</span><span class="n">BZ</span>
+<span class="mi">08</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">0.333333</span><span class="p">,</span><span class="o">-</span><span class="mf">0.333333</span>
+     <span class="p">,</span><span class="n">NSGS</span><span class="p">,</span><span class="n">msa</span><span class="p">,</span><span class="n">msb</span><span class="p">,</span><span class="n">nsa</span><span class="p">,</span><span class="n">nsb</span><span class="p">,</span><span class="n">dthick</span><span class="p">,</span><span class="n">DXS</span><span class="p">,</span><span class="n">DYS</span>
+<span class="mi">09</span><span class="p">:</span> <span class="mi">7</span>      <span class="p">,</span><span class="n">NATM</span>
+<span class="mi">10</span><span class="p">:</span> <span class="mi">1</span>  <span class="mi">1</span>       <span class="mf">0.000000</span>    <span class="mf">0.000000</span>    <span class="mf">6.587046</span>
+<span class="mi">11</span><span class="p">:</span> <span class="mi">2</span>  <span class="mi">1</span>       <span class="mf">0.643677</span>        <span class="mf">0.321838</span>    <span class="mf">5.150511</span>
+<span class="mi">12</span><span class="p">:</span> <span class="mi">3</span>  <span class="mi">1</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">4.042023</span>
+<span class="mi">13</span><span class="p">:</span> <span class="mi">3</span>  <span class="mi">1</span>       <span class="mf">1.000000</span>        <span class="mf">1.000000</span>        <span class="mf">4.503919</span>
+<span class="mi">14</span><span class="p">:</span> <span class="mi">3</span>  <span class="mi">1</span>       <span class="mf">0.000000</span>        <span class="mf">0.000000</span>        <span class="mf">1.801735</span>
+<span class="mi">15</span><span class="p">:</span> <span class="mi">3</span>  <span class="mi">1</span>       <span class="mf">1.000000</span>        <span class="mf">1.000000</span>        <span class="mf">2.084300</span>
+<span class="mi">16</span><span class="p">:</span> <span class="mi">3</span>  <span class="mi">1</span>       <span class="mf">0.333333</span>        <span class="mf">0.666667</span>        <span class="mf">1.142910</span>
+<span class="mi">17</span><span class="p">:</span> <span class="mi">1</span>      <span class="p">,</span><span class="n">WDOM</span>
+</pre></div>
+</div>
+<p>The parameters are explained below</p>
+<p><strong>NELM</strong></p>
+<p>The number of atom species in the surf region.</p>
+<div class="line-block">
+<div class="line">—- Repeat the following line inside the curly bracket for I = 1, .., NELM —-</div>
+<div class="line">{</div>
+</div>
+<p><strong>iz, da1, sap</strong></p>
+<p>See the explanation of these parameters in bulk.txt</p>
+<p><strong>BH(I), BK(I), BZ(I)</strong></p>
+<p>See the explanation of these parameters in bulk.txt</p>
+<p>}</p>
+<p><strong>NSGS, msa, msb, nsa, nsb, dthick, DXS, DYS</strong></p>
+<ul>
+<li><p>NSGS</p>
+<p>The index of the two-dimensional space group of the reconstructed surface structure. NSGS =  1, 2, .., 16 or 17.
+See Sec. ‘List of the two-Dimensional space Groups’.</p>
+</li>
+<li><p>msa, msb, nsa, nsb</p>
+<p>Primitive translation vectors for the reconstructed surface structure <img class="math" src="_images/math/77002b8f4b851c3e1d18651ed3377b82939057c0.png" alt="a_s"/> and <img class="math" src="_images/math/36851f14966bb58f87882b4970e66637ca2d046f.png" alt="b_s"/>
+are determined, according to the primitive translation vector <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> and <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> of 1 x 1 bulk structure, as
+<img class="math" src="_images/math/a0231d5d533141b1f6423fb17642490d8c1679d1.png" alt="\bm{a}_s"/> = msa x <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> + msb x <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> and <img class="math" src="_images/math/5210f3ee47718af5d29c5e4ab2118d2f05fabd00.png" alt="\bm{b}_s"/> = nsa x <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> + nsb x <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/>.
+Examples are written below; Si(111)-(7×7) surface is described by msa = nsb = 7, msb = nsa =0,  NSGS=14.
+Si(111) <img class="math" src="_images/math/a3668bf4c6fdd1031ed158c9b5aa58f54c8f895b.png" alt="\sqrt{3}\times\sqrt{3}"/> surface is described by msa = 2, msb = 1, nsa = -1, nsb = 1, NSGS=15.
+Si(001)-c(4×2) surface is described by msa = 4, nsb = 2, msb = nsa =0, NSGS=9.
+Si(001)-p(2×2) surface is described by msa =2, nsb = 2, msb = nsa = 0, NSGS=7.
+Si(001)-(2×1) surface is described by msa = 2, nsb = 1, msb = nsa =0, NSGS=6.</p>
+</li>
+<li><p>dthick</p>
+<p>The thickness of tail region of potential into vacuum ( unit: <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/> ).
+The surface region is extended to  (z-coordinate of the top surface-layer atom) + dthick
+in the surface part calculation.
+Typically, dthick is 2.0.</p>
+</li>
+<li><p>DXS, DYS</p>
+<p>In order to overlap the surface layer in accordance with the top layer of the bulk (coordinates described in the input data of BULK.EXE), all the atoms on the surface layer move DXS (unit is bulk AA) in the direction of the unit vector a., and move DYS (unit is bulk BB) in the direction of b.</p>
+</li>
+</ul>
+<p><strong>NATMS</strong></p>
+<p>The number of the independent atoms in the reconstructed surface cell, according to the symmetry corresponding to NSGs.</p>
+<p>Repeat the following line inside the curly bracket for I = 1, .., NATM</p>
+<p>{</p>
+<p><strong>IELM(I), ocr(I), X(I), Y(I), Z(I)</strong></p>
+<ul>
+<li><p>IELM(I)</p>
+<p>The atom-species index IELM(I) = 1, 2, .. or NELM.</p>
+</li>
+<li><p>ocr(I)</p>
+<p>The occupation ratio of atom I.</p>
+</li>
+<li><p>X(I)</p>
+<p>The coordinate of atom I in the direction of <img class="math" src="_images/math/c2e4392450b6d428f02f7563e23e6cf0717807f3.png" alt="\bm{a}"/> (unit: AA)</p>
+</li>
+<li><p>Y(I)</p>
+<p>The coordinate of atom I in the direction of <img class="math" src="_images/math/f6e79f5084bf217368cd392a4bc85e4e9b5b226e.png" alt="\bm{b}"/> (unit: BB).</p>
+</li>
+<li><p>Z(I)</p>
+<p>The z-axis coordinate of atom I (unit: <img class="math" src="_images/math/b59eb6e4a4f56ad845a1b64fe2c282472a308ee8.png" alt="\AA"/>). The position at z = 0 in the surface region corresponds to that at z = CC in the bulk region.</p>
+</li>
+</ul>
+<p>}</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>WDOM(I)</strong></p>
+<p>The weight of the intensity for domain I for I=1,…, NDOM.
+For example, a system of three domains (NDOM=3) with the same weights
+is described as ‘1, 1, 1’.</p>
+<p>The surface part calculation is carried out by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ surf.exe
+</pre></div>
+</div>
+<p>and the output file surf-bulkP.s that contains the rocking curve data <img class="math" src="_images/math/e3d4354dc9a03f00e6b2ffeebafb03798b63e79c.png" alt="I_{hk}^{\rm (cal,0)}(\theta_j)"/> for the preset angles <img class="math" src="_images/math/283b65447f983e552cc28cccbd8fb0ee552160a2.png" alt="\{ \theta_j \}"/> appears. The example of surf-bulkP.s is shown below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#azimuths,g-angles,beams</span>
+ <span class="mi">1</span>  <span class="mi">68</span>  <span class="mi">13</span>
+ <span class="c1">#ih,ik</span>
+<span class="o">-</span><span class="mi">6</span>  <span class="o">-</span><span class="mi">6</span>  <span class="o">-</span><span class="mi">5</span>  <span class="o">-</span><span class="mi">5</span>  <span class="o">-</span><span class="mi">4</span>  <span class="o">-</span><span class="mi">4</span>  <span class="o">-</span><span class="mi">3</span>  <span class="o">-</span><span class="mi">3</span>  <span class="o">-</span><span class="mi">2</span>  <span class="o">-</span><span class="mi">2</span>  <span class="o">-</span><span class="mi">1</span>  <span class="o">-</span><span class="mi">1</span>   <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">1</span>   <span class="mi">1</span>   <span class="mi">2</span>   <span class="mi">2</span>   <span class="mi">3</span>   <span class="mi">3</span>   <span class="mi">4</span>   <span class="mi">4</span>   <span class="mi">5</span>   <span class="mi">5</span>   <span class="mi">6</span>   <span class="mi">6</span>
+<span class="mf">0.3000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.5085E-02</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>  <span class="mf">0.0000E+00</span><span class="p">,</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The second line <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">66</span> <span class="pre">13</span></code> gives a number of azimuth angles (NDOM), glancing angles ( (GF-GI)/DG + 1), and beams (NB), respectively.
+The fourth line <code class="docutils literal notranslate"><span class="pre">-6</span>&#160; <span class="pre">-6</span>&#160; <span class="pre">-5</span>&#160; <span class="pre">-5</span> <span class="pre">..</span></code> shows (IH(I),IK(I)) defined in the surf.txt.
+After the fifth line, the values <img class="math" src="_images/math/4b7ecac43251f368d74d5b5dbea50b420372d532.png" alt="\theta_j"/> and <img class="math" src="_images/math/e3d4354dc9a03f00e6b2ffeebafb03798b63e79c.png" alt="I_{hk}^{\rm (cal,0)}(\theta_j)"/> are given.</p>
+</section>
+<section id="third-stage-convolution-procedure">
+<h2>Third stage: convolution procedure<a class="headerlink" href="#third-stage-convolution-procedure" title="Permalink to this headline">¶</a></h2>
+<p>After the surface-part calculation,
+the convolution procedure <img class="math" src="_images/math/de9b19955f494f905052ae39a88bfd134543909f.png" alt="I_{hk}^{\rm (cal)}(\theta) =  \int_{\theta_{\rm min}}^{\theta_{\rm max}} I_{hk}^{\rm (cal, 0)}(\theta') g(\theta - \theta') d \theta'"/>
+where <img class="math" src="_images/math/c6add4cfe7a4f7b548c1abbd71248bc75eda79a9.png" alt="g(\theta) \equiv \frac{1}{\sqrt{2\pi}\sigma} \exp \left( -\frac{\theta^2}{2\sigma^2} \right)"/> should be carried out.
+In STR, <img class="math" src="_images/math/b52df27bfb0b1e3af0c2c68a7b9da459178c2a7d.png" alt="\sigma"/> is determined through the input parameter of full width at half maximum <img class="math" src="_images/math/16cb1e006199f0853a2dc67ea814446a38beb54e.png" alt="\omega"/> which satisfies <img class="math" src="_images/math/7085d593e09b560937c950a35be77063f9bfa081.png" alt="\exp(-\omega^2/8\sigma^2)=1/2"/>.
+The parameter <img class="math" src="_images/math/16cb1e006199f0853a2dc67ea814446a38beb54e.png" alt="\omega"/> governs the broadening effect on the glancing angle <img class="math" src="_images/math/8a87f04e7d7cca18343c084cceca5237fae62491.png" alt="\theta"/> due to the angular divergence of the incident beam.
+This calculation is done by typing the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 make_convolution.py --filename surf-bulkP.s --omega 0.5
+</pre></div>
+</div>
+<p>Here the full width at half maximum is chosen to be <img class="math" src="_images/math/aee43671f69983f520c2b87f07b672ba6ceea144.png" alt="\omega = 0.5^\circ"/>.
+The output file convolution.txt appears and contains the rocking curve data.</p>
+<p>The first column of convolution.txt is the glancing angle in the degree.
+The NB=13 rocking curves appear in the second, third, .., fourteenth column.
+The example of convolution.txt is shown below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">3.00000e-01</span> <span class="mf">6.22615e-163</span> <span class="mf">3.17538e-112</span> <span class="mf">1.15602e-71</span> <span class="mf">1.23082e-40</span> <span class="mf">6.64281e-19</span> <span class="mf">1.84907e-06</span> <span class="mf">4.31146e-03</span> <span class="mf">1.84907e-06</span> <span class="mf">6.64281e-19</span> <span class="mf">1.23097e-40</span> <span class="mf">1.15602e-71</span> <span class="mf">3.17538e-112</span> <span class="mf">6.22615e-163</span>
+<span class="mf">4.00000e-01</span> <span class="mf">1.72522e-157</span> <span class="mf">9.57500e-108</span> <span class="mf">3.79391e-68</span> <span class="mf">4.40286e-38</span> <span class="mf">2.60184e-17</span> <span class="mf">8.79792e-06</span> <span class="mf">6.05036e-03</span> <span class="mf">8.79792e-06</span> <span class="mf">2.60184e-17</span> <span class="mf">4.40337e-38</span> <span class="mf">3.79391e-68</span> <span class="mf">9.57500e-108</span> <span class="mf">1.72522e-157</span>
+<span class="mf">5.00000e-01</span> <span class="mf">3.82947e-152</span> <span class="mf">2.31290e-103</span> <span class="mf">9.97468e-65</span> <span class="mf">1.26225e-35</span> <span class="mf">8.18043e-16</span> <span class="mf">3.44050e-05</span> <span class="mf">7.72969e-03</span> <span class="mf">3.44050e-05</span> <span class="mf">8.18043e-16</span> <span class="mf">1.26240e-35</span> <span class="mf">9.97468e-65</span> <span class="mf">2.31290e-103</span> <span class="mf">3.82947e-152</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="example-2-ge-001-c-4-times-2-surface">
+<h1>Example 2: Ge(001)-c(<img class="math" src="_images/math/e070f69e0f6e7646c97cf85301f365b18bbaf571.png" alt="4 \times 2"/>) surface<a class="headerlink" href="#example-2-ge-001-c-4-times-2-surface" title="Permalink to this headline">¶</a></h1>
+<p>The second example is the TRHEPD data for
+Ge(001)-c(<img class="math" src="_images/math/e070f69e0f6e7646c97cf85301f365b18bbaf571.png" alt="4 \times 2"/>) surface structure in the  one-beam condition.
+The present section details the usage of the two optional utilities, xyz.exe and potcalc.exe.</p>
+<section id="utility-xyz-exe">
+<h2>Utility xyz.exe<a class="headerlink" href="#utility-xyz-exe" title="Permalink to this headline">¶</a></h2>
+<p>The utility xyz.exe generates the atom position data into the xyz-format file
+and is used, for example, when one would like to visualize the atomic structure.
+The utility is carried out by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ xyz.exe
+</pre></div>
+</div>
+<p>in the directory that contains bulk.txt and surf.txt.
+When one executes xyz.exe, the message</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># of a-units, b-units &amp; bulk layers ? :</span>
+</pre></div>
+</div>
+<p>appears and requires the three integer parameters <img class="math" src="_images/math/27e1943f21dc275215bb9d6578d8e319afc1a94f.png" alt="(u_a, u_b, u_c)"/>,
+so as to determine the region of the generated structure file.
+For example, one types</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>for the case of <img class="math" src="_images/math/169aaebadeffea54c5cb9236fe0661d912b752d1.png" alt="(u_a, u_b, u_c)=(1,1,2)"/>.
+The two-dimensional lattice vectors of the generated structure file are
+<img class="math" src="_images/math/16f15aeda13888762adec52f0c8b86800fd84ab8.png" alt="a_{\rm file} \equiv u_a a_{\rm s}"/> and
+<img class="math" src="_images/math/8f6db6e66d62c2d26e5fb98dc2c972ca153b4f0e.png" alt="b_{\rm file} \equiv u_b b_{\rm s}"/>.
+The thickness of the bulk region in the generated structure file
+is set to be <img class="math" src="_images/math/aaa442445efd7380963bd1f477d0838f321f667b.png" alt="u_c \times {\rm CC}"/>.</p>
+<p>The generated structure file is sample/Ge_001_c4x2/output/surf-bulk.txt.
+The last two lines of the file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">16.00267</span>     <span class="mf">0.00000</span>
+  <span class="mf">0.00000</span>     <span class="mf">8.00134</span>
+</pre></div>
+</div>
+<p>indicate the two-dimensional periodic cell vectors,
+<img class="math" src="_images/math/74711b22e5b5eb11870763083b600d09e37f7336.png" alt="a_{\rm file} = (16.00267 \AA, 0)"/> and
+<img class="math" src="_images/math/efd2a26c24ca62a44c4293ac5ca15789530d2251.png" alt="b_{\rm file} = (0, 8.00134 \AA)"/>.</p>
+</section>
+<section id="utility-potcalc-exe">
+<h2>Utility potcalc.exe<a class="headerlink" href="#utility-potcalc-exe" title="Permalink to this headline">¶</a></h2>
+<p>After the surface part calculations,
+the utility potcalc.exe plots the complex potential
+<img class="math" src="_images/math/b6958193715b0beb0fae334502aacbdaff757adc.png" alt="V_{00}(z) = \hbar^2 U_{00}(z) / 2m"/>
+where <img class="math" src="_images/math/e9bc7da808d33a16a8347f27a519bd067186aa66.png" alt="m"/> is the mass of positron and electron.
+The utility is valid only  in the one-beam condition.
+When one executes xyz.exe, the message</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># of bulk-unit repetition ?</span>
+</pre></div>
+</div>
+<p>appears and requires one integer parameter,
+so as to define the lower limit of z in the generated numerical data of the potential.
+For example, one types</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>for the surface region and the bulk region,
+where the bulk region consists of three bulk-unit repetitions.</p>
+</section>
+</section>
+<section id="utility-to-dft-py">
+<h1>Utility to_dft.py<a class="headerlink" href="#utility-to-dft-py" title="Permalink to this headline">¶</a></h1>
+<p>The present section details
+the Python3 utility to_dft.py, which enables us a DFT calculation by
+<a class="reference external" href="https://www.quantum-espresso.org/">Quantum ESPRESSO (QE)</a> for the files in STR.</p>
+<p>The utility generates
+the input file of QE from the xyz-formatted structure file.
+The utility can also run QE, if QE is installed.
+As an optional function,
+the utility supports the generation of hydrogen-terminated structure
+in limited types of surface structures.</p>
+<p>This section gives a tutorial of to_dft.py with the Si(001)-(2x1) surface.
+The input and output files are available on
+the tool/todft/sample/Si001 directory.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>The utility requires</p>
+<ul class="simple">
+<li><p>Python3 &gt;= 3.6</p></li>
+</ul>
+<p>The following packages are also required:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase">Atomic Simulation Environment(ASE)</a> (&gt;= 3.21.1)</p></li>
+<li><p>NumPy</p></li>
+<li><p>SciPy</p></li>
+<li><p>Matplotlib</p></li>
+<li><p>tomli</p></li>
+</ul>
+</section>
+<section id="input-files">
+<h2>Input files<a class="headerlink" href="#input-files" title="Permalink to this headline">¶</a></h2>
+<p>One should prepare an xyz-formatted structure file.
+An example is surf_Si001.xyz in the tool/todft/sample/Si001/ directory.</p>
+<p><strong>surf_Si001.xyz</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">12</span>
+<span class="n">Si</span><span class="p">(</span><span class="mi">001</span><span class="p">)</span> <span class="n">surface</span> <span class="n">test</span>
+ <span class="n">Si</span>    <span class="mf">1.219476</span>    <span class="mf">0.000000</span>    <span class="mf">9.264930</span>
+ <span class="n">Si</span>    <span class="mf">6.459844</span>    <span class="mf">0.000000</span>    <span class="mf">9.987850</span>
+ <span class="n">Si</span>    <span class="mf">1.800417</span>    <span class="mf">1.919830</span>    <span class="mf">8.404650</span>
+ <span class="n">Si</span>    <span class="mf">5.878903</span>    <span class="mf">1.919830</span>    <span class="mf">8.404650</span>
+ <span class="n">Si</span>    <span class="mf">3.839660</span>    <span class="mf">1.919830</span>    <span class="mf">7.155740</span>
+ <span class="n">Si</span>    <span class="mf">0.000000</span>    <span class="mf">1.919830</span>    <span class="mf">6.900440</span>
+ <span class="n">Si</span>    <span class="mf">3.839660</span>    <span class="mf">0.000000</span>    <span class="mf">5.743910</span>
+ <span class="n">Si</span>    <span class="mf">0.000000</span>    <span class="mf">0.000000</span>    <span class="mf">5.597210</span>
+ <span class="n">Si</span>    <span class="mf">1.919830</span>    <span class="mf">0.000000</span>    <span class="mf">4.321250</span>
+ <span class="n">Si</span>    <span class="mf">5.759490</span>    <span class="mf">0.000000</span>    <span class="mf">4.321250</span>
+ <span class="n">Si</span>    <span class="mf">1.919830</span>    <span class="mf">1.919830</span>    <span class="mf">2.963750</span>
+ <span class="n">Si</span>    <span class="mf">5.759490</span>    <span class="mf">1.919830</span>    <span class="mf">2.963750</span>
+</pre></div>
+</div>
+<p>One should prepare also a controlling file
+in Tom’s Obvious, Minimal Language (TOML).
+An example is input.toml  in the tool/todft/sample/Si001 directory.</p>
+<p><strong>input.toml</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Main</span><span class="p">]</span>
+<span class="n">input_xyz_file</span> <span class="o">=</span> <span class="s2">&quot;surf_Si001.xyz&quot;</span>
+<span class="n">output_file_head</span> <span class="o">=</span> <span class="s2">&quot;surf_Si001_output&quot;</span>
+<span class="p">[</span><span class="n">Main</span><span class="o">.</span><span class="n">param</span><span class="p">]</span>
+<span class="n">z_margin</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">slab_margin</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="p">[</span><span class="n">Main</span><span class="o">.</span><span class="n">lattice</span><span class="p">]</span>
+<span class="n">unit_vec</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">7.67932</span><span class="p">,</span> <span class="mf">0.00000</span><span class="p">,</span> <span class="mf">0.00000</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.00000</span><span class="p">,</span> <span class="mf">3.83966</span><span class="p">,</span> <span class="mf">0.00000</span><span class="p">]]</span>
+<span class="p">[</span><span class="n">H_term</span><span class="p">]</span>
+<span class="n">r_SiH</span> <span class="o">=</span> <span class="mf">1.48</span> <span class="c1">#angstrom</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">109.5</span> <span class="c1">#H-Si-H angle in degree</span>
+<span class="p">[</span><span class="n">ASE</span><span class="p">]</span>
+<span class="n">solver_name</span> <span class="o">=</span> <span class="s2">&quot;qe&quot;</span>
+<span class="n">kpts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>        <span class="c1"># sampling k points (Monkhorst-Pack grid)</span>
+<span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;mpirun -np 4 ./pw.x -in espresso.pwi &gt; espresso.pwo&quot;</span>
+<span class="p">[</span><span class="n">Solver</span><span class="p">]</span>
+<span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">control</span><span class="p">]</span>
+<span class="n">calculation</span><span class="o">=</span><span class="s1">&#39;relax&#39;</span> <span class="c1"># &#39;scf&#39;,&#39;realx&#39;,&#39;bands&#39;,...</span>
+<span class="n">pseudo_dir</span><span class="o">=</span><span class="s1">&#39;./&#39;</span>     <span class="c1"># Pseudopotential directory</span>
+<span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">system</span><span class="p">]</span>
+<span class="n">ecutwfc</span> <span class="o">=</span> <span class="mf">20.0</span>        <span class="c1"># Cut-off energy in Ry</span>
+<span class="p">[</span><span class="n">Solver</span><span class="o">.</span><span class="n">pseudo</span><span class="p">]</span>
+<span class="n">Si</span> <span class="o">=</span> <span class="s1">&#39;Si.pbe-n-kjpaw_psl.1.0.0.UPF&#39;</span>
+<span class="n">H</span> <span class="o">=</span> <span class="s1">&#39;H.pbe-kjpaw_psl.1.0.0.UPF&#39;</span>
+</pre></div>
+</div>
+<p>The input file consists of four sections: <code class="docutils literal notranslate"><span class="pre">Main</span></code>, <code class="docutils literal notranslate"><span class="pre">H_term</span></code>, <code class="docutils literal notranslate"><span class="pre">ASE</span></code>, and <code class="docutils literal notranslate"><span class="pre">Solver</span></code>.
+Below is a brief description of the variables for each section.
+The section <code class="docutils literal notranslate"><span class="pre">H_term</span></code> is required,
+only if one would like to generate the hydrogen-terminated structure.
+If not, the section  <code class="docutils literal notranslate"><span class="pre">H_term</span></code> should not appear.</p>
+<section id="main-section">
+<h3><code class="docutils literal notranslate"><span class="pre">Main</span></code> section<a class="headerlink" href="#main-section" title="Permalink to this headline">¶</a></h3>
+<p>This section contains settings related to the parameters required for hydrogen termination.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_xyz_file</span></code></p>
+<p>Format: string</p>
+<p>Description: Name of the xyz file to input</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_file_head</span></code></p>
+<p>Format: string</p>
+<p>Description: Header for output files (xyz and cif files)</p>
+</li>
+</ul>
+</section>
+<section id="main-param-section">
+<h3><code class="docutils literal notranslate"><span class="pre">Main.Param</span></code> section<a class="headerlink" href="#main-param-section" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">z_margin</span></code></p>
+<p>Format: float</p>
+<p>Description: Margin used to extract the lowest and second-to-last atoms. For example, if the z-coordinate of the atom in the bottom layer is <code class="docutils literal notranslate"><span class="pre">z_min</span></code>, the atoms in <code class="docutils literal notranslate"><span class="pre">z_min</span> <span class="pre">-</span> <span class="pre">z_margin</span> <span class="pre">&lt;=</span> <span class="pre">z</span> <span class="pre">&lt;=</span> <span class="pre">z_min</span> <span class="pre">+</span> <span class="pre">z_margin</span></code> will be extracted.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slab_margin</span></code></p>
+<p>Format: float</p>
+<p>Description: Margin for tuning the size of the slab. If the z-coordinates of the atoms in the bottom and top layers are <code class="docutils literal notranslate"><span class="pre">z_min</span></code> , <code class="docutils literal notranslate"><span class="pre">z_max</span></code>, then the slab size is given by <code class="docutils literal notranslate"><span class="pre">z_max-z_min+slab_margin</span></code>.</p>
+</li>
+</ul>
+</section>
+<section id="main-lattice-section">
+<h3><code class="docutils literal notranslate"><span class="pre">Main.lattice</span></code> section<a class="headerlink" href="#main-lattice-section" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">unit_vec</span></code></p>
+<p>Format: list</p>
+<p>Description: Specify the lattice vectors (ex. <code class="docutils literal notranslate"><span class="pre">unit_vec</span> <span class="pre">=</span> <span class="pre">[[7.67932,</span> <span class="pre">0.00000,</span> <span class="pre">0.00000],</span> <span class="pre">[0.00000,</span> <span class="pre">3.83966,</span> <span class="pre">0.00000]]</span></code>).</p>
+</li>
+</ul>
+</section>
+<section id="h-term-section">
+<h3><code class="docutils literal notranslate"><span class="pre">H_term</span></code> section<a class="headerlink" href="#h-term-section" title="Permalink to this headline">¶</a></h3>
+<p>This section enables us to generate the hydrogen-terminated structure.
+At the present code supports
+the hydrogen-terminated structures
+for the present (001)-type slab of the diamond structure.
+The hydrogen-terminated models are generated in the following manner:
+The bottom layer atoms are removed, and H atoms are placed
+at the corresponding positions to create a model
+with the distance to the next layer atoms adjusted to a tetrahedral structure
+(for example, the distance to a silane molecule in the case of Si).</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">r_SiH</span></code></p>
+<p>Format: float</p>
+<p>Description: The distance (in <img class="math" src="_images/math/de306fc1c3edac04a6b383c3204f7af8ed52c3da.png" alt="\mathrm{\mathring{A}}"/>) between a vertex (e.g. Si) and H of a tetrahedral structure.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code></p>
+<p>Format: float</p>
+<p>Description: The angle between the two vertex-H bonds of the tetrahedral structure (e.g. H-Si-H).</p>
+</li>
+</ul>
+</section>
+<section id="ase-section">
+<h3><code class="docutils literal notranslate"><span class="pre">ASE</span></code> section<a class="headerlink" href="#ase-section" title="Permalink to this headline">¶</a></h3>
+<p>This section specifies parameters related to <code class="docutils literal notranslate"><span class="pre">ASE</span></code>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">solver_name</span></code></p>
+<p>Format: string</p>
+<p>Description: The name of the solver. Currently, only <code class="docutils literal notranslate"><span class="pre">qe</span></code> is given.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kpts</span></code></p>
+<p>Format: list</p>
+<p>Description: Specify the k-points to be sampled (Monkhorst-Pack grid).</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">command</span></code></p>
+<p>Format: string</p>
+<p>Description: Set the command used to run the solver.</p>
+</li>
+</ul>
+</section>
+<section id="solver-section">
+<h3><code class="docutils literal notranslate"><span class="pre">Solver</span></code> section<a class="headerlink" href="#solver-section" title="Permalink to this headline">¶</a></h3>
+<p>In this section, parameters related to <code class="docutils literal notranslate"><span class="pre">Solver</span></code> are specified.
+You will need to specify this if you want to perform first-principles calculations directly using ASE.
+Basically, the configuration is the same as the one specified in the input file of each solver.
+For example, in the case of QE, <code class="docutils literal notranslate"><span class="pre">Solver.control</span></code> contains the parameters to be set in the <code class="docutils literal notranslate"><span class="pre">control</span></code> section of QE. The required pseudopotential files written in <code class="docutils literal notranslate"><span class="pre">Solver.pseudo</span></code> section should be downloaded, for example, by the wget command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">Si</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="mf">.1.0.0</span><span class="o">.</span><span class="n">UPF</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">quantum</span><span class="o">-</span><span class="n">espresso</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">upf_files</span><span class="o">/</span><span class="n">H</span><span class="o">.</span><span class="n">pbe</span><span class="o">-</span><span class="n">kjpaw_psl</span><span class="mf">.1.0.0</span><span class="o">.</span><span class="n">UPF</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="execution">
+<h2>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h2>
+<p>The script to_dft.py is carried out by</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 to_dft.py input.toml
+</pre></div>
+</div>
+<p>and the following files are generated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">surf_Si001_output.xyz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">surf_Si001_output.cif</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">espresso.pwi</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">espresso.pwo</span></code></p></li>
+</ul>
+<p>The three files surf_Si001_output.xyz,
+surf_Si001_output.cif and espresso.pwi
+are those in the xyz format,
+the Crystallographic Information File (CIF) format and
+the input file of QE, respectively.
+The files in the xyz and CIF formats
+are useful for visualization and
+are not required for QE.
+If QE works properly,
+the output file of QE, espresso.pwo appears.
+If QE does not work properly,
+the output file espresso.pwo contains error messages.</p>
+<p>Here, the calculated structure is
+the hydrogen-terminated structure;</p>
+<p><strong>surf_Si001_output.xyz</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">14</span>
+<span class="n">Lattice</span><span class="o">=</span> <span class="s2">&quot;7.67932 0.0 0.0 0.0 3.83966 0.0 0.0 0.0 17.0241&quot;</span> <span class="n">Properties</span><span class="o">=</span><span class="n">species</span><span class="p">:</span><span class="n">S</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="n">pos</span><span class="p">:</span><span class="n">R</span><span class="p">:</span><span class="mi">3</span> <span class="n">pbc</span><span class="o">=</span><span class="s2">&quot;T T T&quot;</span>
+<span class="n">Si</span>       <span class="mf">1.21947600</span>       <span class="mf">0.00000000</span>       <span class="mf">9.26493000</span>
+<span class="n">Si</span>       <span class="mf">6.45984400</span>       <span class="mf">0.00000000</span>       <span class="mf">9.98785000</span>
+<span class="n">Si</span>       <span class="mf">1.80041700</span>       <span class="mf">1.91983000</span>       <span class="mf">8.40465000</span>
+<span class="n">Si</span>       <span class="mf">5.87890300</span>       <span class="mf">1.91983000</span>       <span class="mf">8.40465000</span>
+<span class="n">Si</span>       <span class="mf">3.83966000</span>       <span class="mf">1.91983000</span>       <span class="mf">7.15574000</span>
+<span class="n">Si</span>       <span class="mf">0.00000000</span>       <span class="mf">1.91983000</span>       <span class="mf">6.90044000</span>
+<span class="n">Si</span>       <span class="mf">3.83966000</span>       <span class="mf">0.00000000</span>       <span class="mf">5.74391000</span>
+<span class="n">Si</span>       <span class="mf">0.00000000</span>       <span class="mf">0.00000000</span>       <span class="mf">5.59721000</span>
+<span class="n">Si</span>       <span class="mf">1.91983000</span>       <span class="mf">0.00000000</span>       <span class="mf">4.32125000</span>
+<span class="n">Si</span>       <span class="mf">5.75949000</span>       <span class="mf">0.00000000</span>       <span class="mf">4.32125000</span>
+<span class="n">H</span>        <span class="mf">1.91983000</span>      <span class="o">-</span><span class="mf">1.20862950</span>       <span class="mf">3.46707512</span>
+<span class="n">H</span>        <span class="mf">1.91983000</span>       <span class="mf">1.20862950</span>       <span class="mf">3.46707512</span>
+<span class="n">H</span>        <span class="mf">5.75949000</span>      <span class="o">-</span><span class="mf">1.20862950</span>       <span class="mf">3.46707512</span>
+<span class="n">H</span>        <span class="mf">5.75949000</span>       <span class="mf">1.20862950</span>       <span class="mf">3.46707512</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="acknowledgements">
+<h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h1>
+<p>We would like to express our thanks for the support of the &quot;<em>Project for advancement of software usability in materials science</em>&quot; of The Institute for Solid State Physics, The University of Tokyo.</p>
+</section>
+<section id="contact">
+<h1>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h1>
+<p>If you have any comments, questions, bug reports etc. about this utility,
+please contact to the following main developers by sending the e-mail (the address is shown below).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thanada_at_imr</span><span class="o">.</span><span class="n">tohoku</span><span class="o">.</span><span class="n">ac</span><span class="o">.</span><span class="n">jp</span>
+<span class="n">hoshi_at_tottori</span><span class="o">-</span><span class="n">u</span><span class="o">.</span><span class="n">ac</span><span class="o">.</span><span class="n">jp</span>
+</pre></div>
+</div>
+<p>Please change <code class="docutils literal notranslate"><span class="pre">_at_</span></code> into <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, when you will send the e-mail.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">sim-trhepd-rheed documentation</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#download-and-installation">Download and installation</a></li>
+<li><a class="reference internal" href="#switching-between-trhepd-and-rheed-modes">Switching between TRHEPD and RHEED modes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#brief-explanation">Brief explanation</a></li>
+<li><a class="reference internal" href="#list-of-the-two-dimensional-space-groups">List of the two-dimensional space groups</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-1-si-111-sqrt-3-times-sqrt-3-r30-circ-surface-with-a-t4-site-al-adatom">Example 1: Si(111)-(<img class="math" src="_images/math/ed4ddd558597c18359f82a36205038205ca30d9d.png" alt="\sqrt{3} \times \sqrt{3}"/>)R30 <img class="math" src="_images/math/aa7ccbffb40dcc75237a404052776566b273623b.png" alt="^{\circ}"/> surface with a T4-site Al adatom</a><ul>
+<li><a class="reference internal" href="#first-stage-bulk-part-calculation">First stage: bulk part calculation</a></li>
+<li><a class="reference internal" href="#second-stage-surface-part-calculation">Second stage: surface part calculation</a></li>
+<li><a class="reference internal" href="#third-stage-convolution-procedure">Third stage: convolution procedure</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-2-ge-001-c-4-times-2-surface">Example 2: Ge(001)-c(<img class="math" src="_images/math/e070f69e0f6e7646c97cf85301f365b18bbaf571.png" alt="4 \times 2"/>) surface</a><ul>
+<li><a class="reference internal" href="#utility-xyz-exe">Utility xyz.exe</a></li>
+<li><a class="reference internal" href="#utility-potcalc-exe">Utility potcalc.exe</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utility-to-dft-py">Utility to_dft.py</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#input-files">Input files</a><ul>
+<li><a class="reference internal" href="#main-section"><code class="docutils literal notranslate"><span class="pre">Main</span></code> section</a></li>
+<li><a class="reference internal" href="#main-param-section"><code class="docutils literal notranslate"><span class="pre">Main.Param</span></code> section</a></li>
+<li><a class="reference internal" href="#main-lattice-section"><code class="docutils literal notranslate"><span class="pre">Main.lattice</span></code> section</a></li>
+<li><a class="reference internal" href="#h-term-section"><code class="docutils literal notranslate"><span class="pre">H_term</span></code> section</a></li>
+<li><a class="reference internal" href="#ase-section"><code class="docutils literal notranslate"><span class="pre">ASE</span></code> section</a></li>
+<li><a class="reference internal" href="#solver-section"><code class="docutils literal notranslate"><span class="pre">Solver</span></code> section</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#execution">Execution</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li><a class="reference internal" href="#contact">Contact</a></li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">SIM-TRHEPD-RHEED 1.0 documentation  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">sim-trhepd-rheed documentation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, SIM-TRHEPD-RHEED Developper Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
