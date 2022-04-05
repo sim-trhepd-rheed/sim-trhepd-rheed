@@ -8,7 +8,7 @@ Refernce list
 
 [1] T. Hanada, H. Daimon, and S. Ino， Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(√3 × √3 )R30°-Al, -Ga, and -In surfaces,  Phys. Rev. B 51, 13320–13325 (1995).
 
-[2] T. Hanada, Y. Motoyama, K. Yoshimi, T. Hoshi, sim-trhepd-rheed -- Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), preprint: https://arxiv.org/abs/2110.09477
+[2] T. Hanada, Y. Motoyama, K. Yoshimi, T. Hoshi, sim-trhepd-rheed -- Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), Computer Physics Communications, in press; preprint: https://arxiv.org/abs/2110.09477
 
 [3] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).
 
