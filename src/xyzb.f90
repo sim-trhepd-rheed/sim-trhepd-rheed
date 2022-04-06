@@ -8,15 +8,12 @@
         real(8), dimension(:),allocatable :: oocr,xx,yy,zz
         integer, dimension(:),allocatable :: ielm,ielms,iz,izs,nb
         real(8) :: xb(12),yb(12),aa,bb,gam,cc,dx,dy,dthick,dxs,dys,xbl,ybl
-        real(8) :: dummy,zmin,zmax,zoffset,bbx,bby,pxa,pxb,pya,pyb, socr,r2
+        real(8) :: dummy,bbx,bby,pxa,pxb,pya,pyb, socr,r2
         integer :: nh,nk,ndom,nelm,nsg,natm,nelms,nsgs,msa,msb,nsa,nsb,natms
         integer :: iabr,iabp
         integer :: nall,iall,natoms,natomb,ndeg, ix,iy,nx,ny,l,nbl, idotb,idots,i,j
         integer :: ixs,ixs1,ixs2,iys,iys1,iys2,ixb,iyb,Nrsb
         character sname*20,bname*20,fname*48,as*2
-!        write (*,'(A)') ' sequence-filename (console=return) ? '
-!        read (*,'(A)') fname
-!        if (fname /= ' ') open (5,file=fname)
 !----------file open-----------
 !     do
 !----------input bulk data (3)----------
@@ -49,15 +46,8 @@ allocate (iz(nelm))
         read (3,*) natm
 allocate (ielm(natm)); allocate (ocr(natm))
 allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
-        zmin=1d10; zmax=-1d10
         do i=1,natm
           read (3,*) ielm(i),ocr(i),x(i),y(i),z(i)
-          if (z(i) < zmin) zmin=z(i)
-          if (z(i) > zmax) zmax=z(i)
-        end do
-        zoffset=0.5d0*(cc-zmax-zmin)
-        do i=1,natm
-          z(i)=z(i)+zoffset
         end do
         close (3)
 !----------input surface data (2)----------
@@ -82,7 +72,6 @@ allocate (ielms(natms)); allocate (ocrs(natms))
 allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
         do i=1,natms
           read (2,*) ielms(i),ocrs(i),xs(i),ys(i),zs(i)
-          zs(i)=zs(i)+zoffset
         end do
         close (2)
 !----------output xyz data (1)----------
@@ -143,7 +132,7 @@ allocate (oocr(nall))
                 xx(iall)=(xb(j)+pya)*aa+(yb(j)+pyb)*bbx
                 yy(iall)=(yb(j)+pyb)*bby
                 zz(iall)=zs(i)
-                oocr(iall)=ocr(i)
+                oocr(iall)=ocrs(i)
                 write (1,'(A,3F12.6)') as,xx(iall),yy(iall),zz(iall)
               end do
             end do
@@ -200,7 +189,7 @@ allocate (oocr(nall))
             endif
           end do
           if (socr-1d0 > 1d-5) then
-            write (*,*) ' sum of ocr > 1 at ',xx(i),yy(i),zz(i)
+            write (*,*) ' sum of ocr =',socr,' > 1 at ',xx(i),yy(i),zz(i)
           endif
         end do
 
