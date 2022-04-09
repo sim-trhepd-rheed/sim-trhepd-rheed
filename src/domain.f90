@@ -6,10 +6,6 @@
 !*******************************************************************
         implicit none
         character fname*48
-!        write (*,'(A)') ' sequence-filename (console=return) ? '
-!        read (*,'(A)') fname
-!        if (fname /= ' ') open (5,file=fname)
-!----------
     do
       write (*,'(A)') ' .md input-filename (end=e) ? :'
       read (*,'(A)') fname

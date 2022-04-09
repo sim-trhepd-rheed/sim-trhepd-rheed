@@ -4,13 +4,13 @@
 !   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4   v.4b:2017/2
 !    T.Hanada
 !*******************************************************************
-       subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
-                  ,epsb,ngr,nbg,ih,ik,nh,nk,ml &
-                  ,dx,dy,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn,t_o)
+subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
+                 ,epsb,ngr,nbg,ih,ik,jorg,nh,nk,ml &
+                 ,dx,dy,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn)
         implicit none
         complex(8) :: v(nv,ns),vi(nv,ns)
         real(8) :: dz,epsb,dx,dy,wn,ghx,ghy,gky,azi,daz,gi,dg
-        integer :: iv(nbgm,nb),ih(nb),ik(nb),nbg(ngr)
+        integer :: iv(nbgm,nb),ih(nb),ik(nb),jorg(nb),nbg(ngr)
         integer :: nv,nbgm,nb,ns,ngr,nh,nk,ml,naz,ng,idiag,iprn
 
         complex(8) :: t1(nbgm+nbgm,nbgm+nbgm),t2(nbgm+nbgm,nbgm+nbgm)
@@ -19,9 +19,7 @@
         real(8) :: az,caz,saz,ga,cga,wnx,wny,wgx,wgy,s,pih,pik,rmax,r2,rat
         integer :: nbgm2,nrep1,nrep2,irep1,irep2,ibas,igr,nbf,nbf2,i,i2,j,j2,k,l
         real(8), parameter :: pi2=atan(1d0)*8d0
-        logical :: t_o ! text output 
-        character(len=102400) :: str_wrk  ! work array
-!
+
         nbgm2=nbgm+nbgm
         if (ng > naz) then
           nrep1=naz
@@ -58,8 +56,8 @@
              ' irep1,irep2,ngr,igr,nbg=',irep1,irep2,ngr,igr,nbf
 !----------z component of scattering vector----------
           do i=1,nbf
-            wgx=ghx*ih(i+ibas)+wnx
-            wgy=ghy*ih(i+ibas)+gky*ik(i+ibas)+wny
+            wgx=ghx*ih(jorg(i+ibas))+wnx
+            wgy=ghy*ih(jorg(i+ibas))+gky*ik(jorg(i+ibas))+wny
             s=wn*wn-wgx*wgx-wgy*wgy
             if (s >= 0d0) then
               gma(i)=dcmplx(sqrt(s))
@@ -90,7 +88,7 @@
           pih=dx*pi2/nh
           pik=dy*pi2/nk
           do j=1,nbf
-            s=pih*ih(j+ibas)+pik*ik(j+ibas)
+            s=pih*ih(jorg(j+ibas))+pik*ik(jorg(j+ibas))
             ph=dcmplx(cos(s),sin(s))
             j2=j+nbf
             t3(1:nbf2,j) =t3(1:nbf2,j)*ph
@@ -135,18 +133,8 @@
 !----------output----------
         if (iprn == 1) write (*,*) l,' layers'
         write (1) ((t4(i,j),i=1,nbf),j=1,nbf)
-!       if (t_o) write(11,*) ((t4(i,j),i=1,nbf),j=1,nbf)
-        if (t_o) then
-          do j=1,nbf
-            do i=1,nbf
-              write (str_wrk,*) t4(i,j)
-              write (11,'(a)') trim(str_wrk)
-            enddo
-          enddo
-        endif
         ibas=ibas+nbf
       end do ! igr=1,ngr
       end do ! irep2=1,nrep2
       end do ! irep1=1,nrep1
-      return
-      end
+end subroutine blkref

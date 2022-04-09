@@ -4,8 +4,8 @@
 !   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4   v.4b:2017/2
 !    T.Hanada
 !*******************************************************************
-       subroutine srfref(nv,nb,ns,v,vi,iv,dz,ngr,nbg,iord,ih,ik &
-                  ,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn)
+subroutine srfref(nv,nb,ns,v,vi,iv,dz,ngr,nbg,iord,ih,ik &
+                 ,wn,ghx,ghy,gky,azi,daz,naz,gi,dg,ng,idiag,iprn)
         implicit none
         complex(8) :: v(nv,ns),vi(nv,ns)
         real(8) :: dz,wn,ghx,ghy,gky,azi,daz,gi,dg
@@ -17,6 +17,7 @@
         real(8) :: f2(nb)
         integer :: nb2,nrep1,nrep2,irep1,irep2,nb0,ib1,ib2,i,j,j2,l,k
         real(8) :: az,caz,saz,ga,cga,sga,angle,wnx,wny,wgx,wgy,wnsga2,s
+        real(8), parameter :: deg=45d0/atan(1d0)
 
         if (ng > naz) then
           nrep1=naz
@@ -27,7 +28,10 @@
         endif
         nb2=nb+nb
         do i=1,nb
-          if (ih(i) == 0 .and. ik(i) == 0) nb0=i
+          if (ih(i) == 0 .and. ik(i) == 0) then
+            nb0=i
+            exit
+          endif
         end do
 !----------azimuth,glancing angle scan----------
       do irep1=1,nrep1
@@ -43,12 +47,12 @@
         do irep2=1,nrep2
           if (ng > naz) then
             ga=gi+(irep2-1)*dg
-            angle=ga*180d0/3.141592654d0
+            angle=ga*deg
             cga=cos(ga)
             sga=sin(ga)
           else
             az=azi+(irep2-1)*daz
-            angle=az*180d0/3.141592654d0
+            angle=az*deg
             caz=cos(az)
             saz=sin(az)
           endif
@@ -111,9 +115,8 @@
               f2(i)=0d0
             endif
           end do
-          write (3,'(E12.4,200(",",E12.4))') angle,(f2(i),i=1,nb)
+          write (3,'(ES12.4,*(",",ES12.4))') angle,(f2(i),i=1,nb)
         end do ! irep2=1,nrep2
         write (3,*)
       end do ! irep1=1,nrep1
-      return
-      end
+end subroutine srfref

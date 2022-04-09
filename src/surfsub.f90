@@ -6,10 +6,10 @@
 !**********************************************************
 !       surface ghk
 !**********************************************************
-        subroutine srfghk(nvm,nv,nvb,igh,igk,nb,ih,ik,iv)
+subroutine srfghk(nvm,nvb,nb,ih,ik, nv,igh,igk,iv)
         implicit none
-        integer :: nvm,nv,nvb,nb
-        integer :: igh(nvm),igk(nvm),ih(nb),ik(nb),iv(nb,nb)
+        integer :: nvm,nvb,nb, nv
+        integer :: ih(nb),ik(nb), igh(nvm),igk(nvm),iv(nb,nb)
         integer :: ih0,ik0,k,l,m,iflag
         nv=nvb
         do k=1,nb-1
@@ -37,5 +37,4 @@
             endif
           end do
         end do
-        return
-        end
+end subroutine srfghk

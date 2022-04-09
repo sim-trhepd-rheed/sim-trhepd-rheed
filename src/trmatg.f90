@@ -3,16 +3,15 @@
 !      transfer matrix of 1 slice --> t1
 !   v.1:84/10   v.2:86/11   v.3:90/4    T.Hanada
 !*******************************************************************
-      subroutine trmat(nv,nbm,nb,gma,v,vi,iv,dz,t1,t2,t3,idiag)
+subroutine trmat(nv,nbm,nb,gma,v,vi,iv,dz,t1,t2,t3,idiag)
       implicit none
       integer :: iv(nbm,nb),nv,nbm,nb,idiag
       complex(8) :: v(nv),vi(nv),gma(nb)
       complex(8) :: t1(nbm+nbm,nbm+nbm),t2(nbm+nbm,nbm+nbm),t3(nbm+nbm,nbm+nbm)
       real(8) :: dz
 
-      complex(8) :: ph,ph2,tau,rou,x1,x2,x3, x4
-      real(8) :: eig(nb), s,r
-      integer :: nbm2, i,j,icom, i2,j2, it,k
+      complex(8) :: ph,ph2,tau,rou,x1,x2,x3
+      integer :: nbm2, i,j,icom, i2,j2
       real(8) :: rwork(2*nb) ! work array for zgeev
 
       nbm2=nbm+nbm
@@ -56,5 +55,4 @@
           end do
         end do
         call gcmi2(nbm2,nb+nb,t1,t3)
-      return
-      end
+end subroutine trmat

@@ -3,14 +3,11 @@
 !   subroutine surfio
 !   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4    T.Hanada
 !*******************************************************************
-        program surf
+program surf
         integer :: iprn,idotb,idots,ndom
         character bname*20,sname*20,fname*44,dname*46,yn*1,ep*1
         integer :: date_time(8)
         character*10 cdate,ctime,czone
-!        write (*,'(A)') ' sequence-filename (console=return) ? '
-!        read (*,'(A)') fname
-!        if (fname /= ' ') open (5,file=fname)
 !---------------------
       ep='P' ! 'P' for positoron, 'E' for electron
 !
@@ -68,9 +65,9 @@
         open (3,file=fname)
 
         write (4,'(A)') '----------------------------------'
-        write (4,'(2A)') 'BULK output: ',bname
-        write (4,'(2A)') 'SURF input : ',sname
-        write (4,'(2A)') 'SURF output: ',fname
+        write (4,'(2A)') 'BULK output: ',trim(bname)
+        write (4,'(2A)') 'SURF input : ',trim(sname)
+        write (4,'(2A)') 'SURF output: ',trim(fname)
 !----------main routine----------
         rewind 1
         call surfio(iprn)
@@ -82,7 +79,7 @@
           dname=sname(:idots)//'-'//bname(:idotb)//'.s'
           write (*,'(" ",A)') dname
           open (3,file=dname)
-          write (4,'(2A)') 'domainsum output: ',dname
+          write (4,'(2A)') 'domainsum output: ',trim(dname)
           call domainsum(ndom)
         endif
         goto 1000
@@ -90,4 +87,4 @@
       end do
     end do
     1000 continue
-    end
+end program surf

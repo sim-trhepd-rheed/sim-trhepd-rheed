@@ -3,12 +3,10 @@
 !   subroutine bulkio
 !   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4    T.Hanada
 !*******************************************************************
-        program bulk
+program bulk
         implicit none
         integer :: inegpos, idiag, iprn, idot
         character fname*20,bname*24,ep*1 !,dia*1 ! ,yn*1
-        character bname_txt*24
-        logical :: text_output ! option for the text-based output file
 !---------------------
 !       write (*,'(A)') ' 0:electron 1:positron ? '
 !        read (*,*) inegpos
@@ -26,8 +24,6 @@
         if (ep == 'E') inegpos=0
         idiag=3
         iprn=0
-        text_output = .true.
-
 !----------file open-----------
       do
 !       write (*,'(A)') ' input-filename (end=e) ? :'
@@ -46,17 +42,14 @@
           idot=LEN_TRIM(fname)
         endif
         bname=fname(:idot)//ep//'.b'
-        bname_txt=fname(:idot)//ep//'.txt'
 !       write (*,'(" ",A)') bname
-        if (text_output) open (11,file=bname_txt,form='formatted')
         open (1,file=bname,form='unformatted')
 !----------main routine----------
-        call bulkio(inegpos,idiag,iprn,text_output)
-        if (text_output) close (11)
+        call bulkio(inegpos,idiag,iprn)
         close (1)
         close (3)
         goto 1000
 !        stop!#####altered#####
       end do
       1000 continue
-      end
+end program bulk

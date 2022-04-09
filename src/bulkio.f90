@@ -1,46 +1,48 @@
 !*******************************************************************
 !   rheed multi slice method : bulk
 !   subroutine scanrg,blkibg,blkghk,asfcrr,asfcef,scpot,blkref
-!   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4   v.4b:2017/2
+!   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4   v.4b:2017/2   v.5:2022/1
 !    T.Hanada
 !*******************************************************************
-! max # of potential fourier components : nvm
-! max # of unit layers : mlm
-!*******************************************************************
-        subroutine bulkio(inegpos,idiag,iprn,t_o)
+subroutine bulkio(inegpos,idiag,iprn)
         implicit none
-        logical :: t_o ! text_output 
-        integer, parameter :: mlm=1000, mab=6
+        integer, parameter :: nab=4
         complex(8), dimension(:,:),allocatable :: v,vi
         real(8), dimension(:,:,:),allocatable :: asf
-        real(8), dimension(:),allocatable :: rdom,gh,gk,Ghk
-        real(8), dimension(:),allocatable :: dth,dtk,dtz,elm,dchg
-        real(8), dimension(:,:),allocatable :: a,b,c
+        real(8), dimension(:,:),allocatable :: asf_a,asf_b,asf_c
+        real(8), dimension(:),allocatable :: rdom,gh,gk
+        real(8), dimension(:),allocatable :: Bh,Bk,Bz,da1,sap
         real(8), dimension(:),allocatable :: ocr,x,y,z
-        integer, dimension(:),allocatable :: ielm,nb,iord,ih,ik,nbg
+        integer, dimension(:),allocatable :: iz,ielm,nb,jorg,ih,ik,nbg
         integer, dimension(:),allocatable :: igh,igk
         integer, dimension(:,:),allocatable :: iv
 
         integer :: nbgm,nvm
-        real(8) :: be,wn,azi,azf,daz,gi,gf,dg,tem,dz,epsb,aa,bb,gam,cc,dx,dy
-        real(8) :: ghx,ghy,gky,da1,sap,sae, amass,zmin,zmax,zoffset
-        integer :: inegpos,isym,nh,nk,ndom,ml,nelm,nsg,mp,natm,naz,ng,ns,ngr,nv
-        integer :: nbt,ibt,nabr,nabi,iabr,iabp,iabe,idiag
-        integer :: iprn, idom,iz,ichg, i,j,k
-        real(8), parameter :: eps=1d-20, pi=atan(1d0)*4d0, rad=pi/180d0
-        character(len=102400) :: str_wrk  ! work array
-!        
+        real(8) :: be,wn,azi,azf,daz,gi,gf,dg,dz,epsb,aa,bb,gam,cc,dx,dy
+        real(8) :: ghx,ghy,gky
+        integer :: inegpos,nh,nk,ndom,ml,nelm,nsg,natm,naz,ng,ns,ngr,nv
+        integer :: nbt,ibt,idiag
+        integer :: iprn, idom, i,j,k
+        real(8), parameter :: pi2=atan(1d0)*8d0, rad=pi2/360d0
 !----------input(3)----------
 ! beam parameters
-        isym=0
         read (3,*) nh,nk,ndom
-        if (nh < 1 .or. nk < 1) return
-        if (ndom < 1) return
+        if (nh < 1 .or. nk < 1) then
+          write (*,*) ' bulkio.f90 line 29: bad nh,nk ',nh,nk
+          stop
+        endif
+        if (ndom < 1)  then
+          write (*,*) ' bulkio.f90 line 29: bad ndom ',ndom
+          stop
+        endif
 allocate (nb(ndom)); allocate (rdom(ndom))
         read (3,*) (nb(i),i=1,ndom)
         nbt=0
         do i=1,ndom
-          if (nb(i) < 1) return
+          if (nb(i) < 1) then
+            write (*,*) ' bulkio.f90 line 39: bad nb ',nb(i)
+            stop
+          endif
           nbt=nbt+nb(i)
         end do
         read (3,*) (rdom(i),i=1,ndom)
@@ -52,202 +54,164 @@ allocate (ih(nbt)); allocate (ik(nbt))
         end do
         read (3,*) be,azi,azf,daz,gi,gf,dg
         read (3,*) dz,ml
-        tem=0d0; epsb=1d-10
-        if (ml < 1 .or. ml > mlm) ml=mlm
-!        if (epsb < eps) epsb=eps
+        epsb=1d-10
 
 ! atomic parameters
-        iabr=0; iabp=1; iabe=0
         read (3,*) nelm
-        if (nelm < 1) return
-allocate (dth(nelm)); allocate (dtk(nelm)); allocate (dtz(nelm))
-allocate (elm(nelm)); allocate (dchg(nelm))
-allocate (a(mab,nelm)); allocate (b(mab,nelm)); allocate (c(mab,nelm))
-
+        if (nelm < 1) then
+          write (*,*) ' bulkio.f90 line 60: bad nelm ',nelm
+          stop
+        endif
+allocate (iz(nelm)); allocate (da1(nelm)); allocate (sap(nelm))
+allocate (Bh(nelm)); allocate (Bk(nelm)); allocate (Bz(nelm)); 
         do i=1,nelm
-          read (3,*) iz,da1,sap;  ichg=0; sae=0d0
-          dchg(i)=dble(ichg)
-          elm(i)=amass(iz)
-
-          call asfparam(iz,iabr,nabr,a(1,i),b(1,i))
-            if (nabr <= 0) return
-          a(1,i)=a(1,i)-da1                           ! electron
-          if (inegpos > 0) a(1:nabr,i)=-a(1:nabr,i)   ! positron
-
-          nabi=1 
-          if (nabr+nabi > mab) return
-          a(nabr+1,i)=sap; b(nabr+1,i)=0d0 ! V(imag)=a*V(real), b is dummy
-
-          read (3,*) dth(i),dtk(i),dtz(i)
-          dth(i)=abs(dth(i)); dtk(i)=abs(dtk(i)); dtz(i)=abs(dtz(i))
-       end do
+          read (3,*) iz(i),da1(i),sap(i)
+          if (iz(i) == 0 .or. iabs(iz(i)) > 98) then
+            write (*,*) ' bulkio.f90 line 68: max. atomic number iz is 98.',iz(i)
+            stop
+          endif
+          read (3,*) Bh(i),Bk(i),Bz(i)
+        end do
 
 ! structural parameters
         read (3,*) nsg,aa,bb,gam,cc,dx,dy
-        mp=0
         if (ndom > 1) then
-          if (abs(aa-bb) > 1d-4) return
+          if (abs(aa-bb) > 1d-4) then
+            write (*,*) ' bulkio.f90 line 73: aa = bb required for multidomain ',aa,bb
+            stop
+          endif
           if (abs(gam-90d0) < 1d-4) then
             do i=1,ndom
-              if (abs(rdom(i)/90d0 - nint(rdom(i)/90d0)) > 1d-4) return
+              if (abs(rdom(i)/90d0 - nint(rdom(i)/90d0)) > 1d-4) then
+                write (*,*) ' bulkio.f90 line 48: rdom must be an integer multiple of 90 deg ',rdom(i)
+                stop
+              endif
             end do
           else if (abs(gam-120d0) < 1d-4) then
             do i=1,ndom
-              if (abs(rdom(i)/60d0 - nint(rdom(i)/60d0)) > 1d-4) return
+              if (abs(rdom(i)/60d0 - nint(rdom(i)/60d0)) > 1d-4) then
+                write (*,*) ' bulkio.f90 line 48: rdom must be an integer multiple of 60 deg ',rdom(i)
+                stop
+              endif
             end do
           else
-            return
+            write (*,*) ' bulkio.f90 line 73: gam must be 90 or 60 deg for multidomain',gam
+            stop
           endif
         endif
 
 ! atomic structural parameters
         read (3,*) natm
-        if (natm < 1) return
+        if (natm < 1) then
+          write (*,*) ' bulkio.f90 line 90: bad natm ',natm
+          stop
+        endif
 allocate (ielm(natm)); allocate (ocr(natm))
 allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
-        zmin=1d10; zmax=-1d10
         do i=1,natm
           read (3,*) ielm(i),ocr(i),x(i),y(i),z(i)
-          if (ielm(i) < 1 .or. ielm(i) > nelm) return
-          if (z(i) < zmin) zmin=z(i)
-          if (z(i) > zmax) zmax=z(i)
+          if (ielm(i) < 1 .or.  ielm(i) > nelm) then
+            write (*,*) ' bulkio.f90 line 98: bad ielm ',ielm(i)
+            stop
+          endif
         end do
-          zoffset=0.5d0*(cc-zmax-zmin)
-          do i=1,natm
-            z(i)=z(i)+zoffset
-          end do
 !----------scan range----------
         call scanrg(azi,azf,daz,naz,gi,gf,dg,ng)
         rdom(1:ndom)=rdom(1:ndom)*rad
         gam=gam*rad
-          ns=int(cc/dz)+1
-          dz=cc/ns
-        if (ns < 2) return
-
-!----------output: binary (and text) file ----------
-        
-        if (t_o) then 
-           write (str_wrk,*) ndom
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) inegpos,isym,nh,nk,iabr,iabp,iabe,nabr,nabi,idiag
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) (nb(i),rdom(i),i=1,ndom)
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) (ih(i),ik(i),i=1,nbt)
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) be,azi,daz,naz,gi,dg,ng
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) tem,dz,ml,epsb
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) nsg,mp,aa,bb,gam,cc,dx,dy,zoffset
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) nelm,natm
-           write (11,'(a)') trim(str_wrk)
-           do i=1,nelm
-              write (str_wrk,*) a(1:nabr+nabi,i),b(1:nabr+nabi,i)
-              write (11,'(a)') trim(str_wrk)
-              write (str_wrk,*) dth(i),dtk(i),dtz(i),elm(i),dchg(i)
-              write (11,'(a)') trim(str_wrk)
-           end do
-           do i=1,natm
-              write (str_wrk,*) ielm(i),ocr(i),x(i),y(i),z(i)
-              write (11,'(a)') trim(str_wrk)
-           end do
+        ns=int(cc/dz)+1
+        if (ns < 2) then
+          write (*,*) ' bulkio.f90 line 108: too small ns ',ns
+          stop
         endif
-        
+        dz=cc/ns
+!----------output(1)----------
         write (1) ndom
-        write (1) inegpos,isym,nh,nk,iabr,iabp,iabe,nabr,nabi,idiag
+        write (1) inegpos,nh,nk,idiag
         write (1) (nb(i),rdom(i),i=1,ndom)
         write (1) (ih(i),ik(i),i=1,nbt)
         write (1) be,azi,daz,naz,gi,dg,ng
-        write (1) tem,dz,ml,epsb
-        write (1) nsg,mp,aa,bb,gam,cc,dx,dy,zoffset
+        write (1) dz,ml,epsb
+        write (1) nsg,aa,bb,gam,cc,dx,dy
         write (1) nelm,natm
+
         do i=1,nelm
-           write (1) a(1:nabr+nabi,i),b(1:nabr+nabi,i)
-           write (1) dth(i),dtk(i),dtz(i),elm(i),dchg(i)
+          write (1) iz(i),da1(i),sap(i)
+          write (1) Bh(i),Bk(i),Bz(i)
         end do
         do i=1,natm
-           write (1) ielm(i),ocr(i),x(i),y(i),z(i)
+          write (1) ielm(i),ocr(i),x(i),y(i),z(i)
         end do
-           
-!-----------energy correction of atomic scattering factor--------
-        call asfcrr(be,wn,nelm,mab,nabr,nabi,a,b,c,dchg,dth,dtk,dtz,elm &
-                   ,tem,aa*bb*sin(gam))
-        ghx=(pi+pi)/(aa*nh)
-        ghy=-(pi+pi)/(aa*tan(gam)*nh)
-        gky=(pi+pi)/(bb*sin(gam)*nk)
+!-----------atomic scattering factor--------
+! domain independent
+allocate (asf_a(nab,nelm)); allocate (asf_b(nab,nelm)); allocate (asf_c(nab,nelm))
+        call asfcrr(inegpos,be,wn,nelm,iz,da1,nab,asf_a,asf_b,asf_c,Bz,aa*bb*sin(gam))
+        ghx=pi2/(aa*nh)
+        ghy=-pi2/(aa*tan(gam)*nh)
+        gky=pi2/(bb*sin(gam)*nk)
 !----------domain----------
       ibt=1
       do idom=1,ndom
 !----------groups of interacting beams in bulk layer----------
 ! order of ih,ik will be sorted
-allocate (iord(nb(idom))); allocate (nbg(nb(idom)))
-        call blkibg(nb(idom),ih(ibt),ik(ibt),nh,nk, iord,ngr,nbg)
-        nbgm=0; nvm=1; j=0
+allocate (jorg(nb(idom))); allocate (nbg(nb(idom)))
+        call blkibg(nb(idom),nh,nk,ih(ibt),ik(ibt), jorg,ngr,nbg)
+        nbgm=maxval(nbg(1:ngr))
+        nvm=1; j=0
         do i=1,ngr
-          if (nbg(i) > nbgm) nbgm=nbg(i)
           nvm=nvm+nbg(i)*(nbg(i)-1)/2
           j=j+nbg(i)
         end do
         if (j /= nb(idom)) then
           write (*,*) 'grouping error ',j,nb(idom)
-          return
+          stop
         endif
 !-----------scattering vector & atomic scattering factor--------
 allocate (iv(nbgm,nb(idom)))
 allocate (igh(nvm)); allocate (igk(nvm))
-        call blkghk(ngr,nbg,nvm,nv,igh,igk,nbgm,nb(idom),ih(ibt),ik(ibt),iv)
-allocate (asf(nv,mab,nelm)); allocate (Ghk(nv))
-        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,mab,nabr,nabi,a,c,asf,dth,dtk,Ghk)
-!----------output: binary (and text)  file----------
-        if (t_o) then
-           write (str_wrk,*) (iord(i),i=1,nb(idom))
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) ngr,nv
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) (nbg(i),i=1,ngr)
-           write (11,'(a)') trim(str_wrk)
-           write (str_wrk,*) (igh(i),igk(i),i=1,nv)
-           write (11,'(a)') trim(str_wrk)
-        endif
-        write (1) (iord(i),i=1,nb(idom))
+        call blkghk(ngr,nbg,nbgm,nb(idom),ih(ibt),ik(ibt),jorg,nvm, nv,igh,igk,iv)
+allocate (asf(nv,nab,nelm))
+        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,nab,asf_a,asf_c,asf,Bh,Bk)
+!----------output(1)----------
+        write (1) jorg(1:nb(idom))
         write (1) ngr,nv
-        write (1) (nbg(i),i=1,ngr)
-        write (1) (igh(i),igk(i),i=1,nv)
+        write (1) nbg(1:ngr)
+        write (1) igh(1:nv)
+        write (1) igk(1:nv)
 !-----------elements of scattering matrix : v/vi----------
 allocate (gh(nv)); allocate (gk(nv))
         do i=1,nv
-          gh(i)=(-(pi+pi)/nh)*dble(igh(i))
-          gk(i)=(-(pi+pi)/nk)*dble(igk(i))
+          gh(i)=(-pi2/nh)*dble(igh(i))
+          gk(i)=(-pi2/nk)*dble(igk(i))
         end do
 allocate (v(nv,ns)); allocate (vi(nv,ns))
 ! bulk unit (in the 'ns' slices)
         call scpot(1,nv,nv,ns,v,vi,natm,nelm,ielm,z,0d0,dz &
-             ,mab,nabr,nabi,asf,b,dchg,1d0,nsg,1,0,0,1,gh,gk,Ghk,ocr,x,y,0d0,0d0)
+             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,0d0,0d0)
 ! lower unit (below the 'ns' slices)
         call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,cc,dz &
-             ,mab,nabr,nabi,asf,b,dchg,1d0,nsg,1,0,0,1,gh,gk,Ghk,ocr,x,y,-dx,-dy)
+             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,-dx,-dy)
 ! upper unit (above the 'ns' slices)
         call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,-cc,dz &
-             ,mab,nabr,nabi,asf,b,dchg,1d0,nsg,1,0,0,1,gh,gk,Ghk,ocr,x,y,dx,dy)
+             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,dx,dy)
 !-----------incident beam rocking-----------
-       call blkref(nv,nbgm,nb(idom),ns,v,vi,iv,dz,epsb,ngr,nbg,ih(ibt),ik(ibt) &
-                  ,nh,nk,ml,dx,dy,wn,ghx,ghy,gky &
-                  ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn,t_o)
+       call blkref(nv,nbgm,nb(idom),ns,v,vi,iv,dz,epsb,ngr,nbg &
+                  ,ih(ibt),ik(ibt),jorg,nh,nk,ml,dx,dy,wn,ghx,ghy,gky &
+                  ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn)
 deallocate (vi); deallocate (v)
 deallocate (gk); deallocate (gh)
-deallocate (Ghk); deallocate (asf)
+deallocate (asf)
 deallocate (igk); deallocate (igh)
-deallocate (iv); deallocate (nbg); deallocate (iord)
+deallocate (iv); deallocate (nbg); deallocate (jorg)
         ibt=ibt+nb(idom)
       end do ! idom=1,ndom
+
+deallocate (asf_c); deallocate (asf_b); deallocate (asf_a)
 deallocate (z); deallocate (y); deallocate (x)
 deallocate (ocr); deallocate (ielm)
-deallocate (c); deallocate (b); deallocate (a)
-deallocate (dchg); deallocate (elm)
-deallocate (dtz); deallocate (dtk); deallocate (dth)
+deallocate (Bz); deallocate (Bk); deallocate (Bh)
+deallocate (sap); deallocate (da1); deallocate (iz)
 deallocate (ik); deallocate (ih)
 deallocate (rdom); deallocate (nb)
-      return
-      end
+
+end subroutine bulkio

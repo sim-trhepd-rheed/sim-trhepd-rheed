@@ -4,7 +4,7 @@
 !     AA = BB, GAM = 90 or 120
 !   v.1:2014/4  v.1b:2017/3  T.Hanada
 !*******************************************************************
-        subroutine domainsum(nwdom)
+subroutine domainsum(nwdom)
         implicit none
         integer :: nwdom
         real(8), dimension(:),allocatable :: f2,angle,rdom,wdom
@@ -35,7 +35,7 @@ allocate (nb(ndom)); allocate (rdom(ndom)); allocate (wdom(ndom))
       end do
 !----- change weights -----
       if (nwdom == 0) then
-        write (*,'(A,I2,A)') ' intensity weights of ',ndom,' domains ? :'
+        write (*,'(A,I0,A)') ' intensity weights of ',ndom,' domains ? :'
         read (*,*) (wdom(idom),idom=1,ndom)
       endif
 
@@ -67,6 +67,8 @@ allocate (s2(mb,nrep2,nrep1)); allocate (f2(mb)); allocate (angle(nrep2))
           dr=rdom(idomr)-rdom(idom)
           cdr=cos(dr*rad);  sdr=sin(dr*rad)
         endif
+
+!        read (2,'(A)') str     ! "angle (deg)....."
         do irep1=1,nrep1
           do irep2=1,nrep2
             read (2,*) angle(irep2),f2(1:nb(idom))
@@ -104,12 +106,12 @@ allocate (s2(mb,nrep2,nrep1)); allocate (f2(mb)); allocate (angle(nrep2))
 
 ! output (single domain format)
       write (3,'("#azimuths,g-angles,beams")')
-      write (3,'(3I4)') naz,ng,mb
+      write (3,'(*(I0,X))') naz,ng,mb
       write (3,'("#ih,ik")')
-      write (3,'(400I4)') (ih(ib),ik(ib),ib=1+ibtr,mb+ibtr)
+      write (3,'("deg",*(",",I0,X,I0))') (ih(ib),ik(ib),ib=1+ibtr,mb+ibtr)
       do irep1=1,nrep1
         do irep2=1,nrep2
-          write (3,'(E12.4,200(",",E12.4))') &
+          write (3,'(ES12.4,*(",",ES12.4))') &
                 angle(irep2),(s2(ib,irep2,irep1),ib=1,mb)
         end do
         write (3,*)
@@ -117,5 +119,5 @@ allocate (s2(mb,nrep2,nrep1)); allocate (f2(mb)); allocate (angle(nrep2))
 deallocate (s2); deallocate (f2); deallocate (angle)
 deallocate (ih); deallocate (ik)
 deallocate (nb); deallocate (rdom); deallocate (wdom)
-      return
-      end
+
+end subroutine domainsum
