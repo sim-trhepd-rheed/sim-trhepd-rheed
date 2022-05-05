@@ -7,32 +7,25 @@ program U0
         integer :: inegpos, idotb,idots, nubulk
         character fname*60,bname*24,sname*24,ep*1 !,dia*1 ! ,yn*1
 !---------------------
-!       write (*,'(A)') ' 0:electron 1:positron ? '
-!       read (*,*) inegpos
-!       if (inegpos <= 0) then
-!         inegpos=0; ep='E'
-!       else
-!         inegpos=1; ep='P'
-!       endif
-!       write (*,*) ep
-        ep='P' ! ep='E' for electron
-!
-        if (ep == 'P') then
-          inegpos=1
-        else
-          inegpos=0
-        endif
-!
+       write (*,'(A)') ' 0:electron 1:positron ? '
+       read (*,*) inegpos
+       if (inegpos <= 0) then
+         inegpos=0; ep='E'
+       else
+         inegpos=1; ep='P'
+       endif
+       write (*,*) ep
+!        ep='P' ! ep='E' for electron
         write (*,'(A)') ' # of bulk-unit repetition ? '
         read (*,*) nubulk
         if (nubulk < 1) nubulk=1
 !----------file open-----------
-!     do
-!       write (*,'(A)') ' bulk-input-filename (end=e) ? :'
-!       read (*,'(A)') bname
-!       write (*,'(" ",A)') bname
-!       if (bname == 'e' .or. bname == 'E') stop
-        bname = 'bulk.txt'
+      do
+        write (*,'(A)') ' bulk-input-filename (end=e) ? :'
+        read (*,'(A)') bname
+        write (*,'(" ",A)') bname
+        if (bname == 'e' .or. bname == 'E') stop
+!        bname = 'bulk.txt'
          
         idotb=scan(bname,".",BACK=.true.)
         if (idotb > 0) then
@@ -41,12 +34,12 @@ program U0
           idotb=LEN_TRIM(bname)
         endif
 
-!       write (*,'(A)') ' surface-structure-filename (end=e) ? :'
-!       read (*,'(A)') sname
-!       write (*,'(" ",A)') sname
-!       if (sname == 'e' .or. sname == 'E') exit
-        sname = 'surf.txt'
-!
+        write (*,'(A)') ' surface-structure-filename (end=e) ? :'
+        read (*,'(A)') sname
+        write (*,'(" ",A)') sname
+        if (sname == 'e' .or. sname == 'E') exit
+!        sname = 'surf.txt'
+
         idots=scan(sname,".",BACK=.true.)
         if (idots > 0) then
           idots=idots-1
@@ -74,5 +67,5 @@ program U0
         close (2)
 
         close (4)
-!     end do
+      end do
 end program U0

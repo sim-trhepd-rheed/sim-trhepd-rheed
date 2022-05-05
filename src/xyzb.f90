@@ -3,6 +3,7 @@
 !   bulk+surf input file --> xyz file
 !   v.1:2014/4    T.Hanada
 !*******************************************************************
+program xyzb
         implicit none
         real(8), dimension(:),allocatable :: ocr,x,y,z,ocrs,xs,ys,zs
         real(8), dimension(:),allocatable :: oocr,xx,yy,zz
@@ -110,8 +111,8 @@ allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
 
         Nrsb=abs(msa*nsb-msb*nsa)
         nall=(natoms+natomb*nbl*Nrsb)*nx*ny
-        write (1,'(I5)') nall
-        write (1,'(A," / ",A)') sname,bname
+        write (1,'(I0)') nall
+        write (1,'(A," / ",A)') trim(sname),trim(bname)
 
         bbx=bb*cos(gam*atan(1d0)/45d0)
         bby=bb*sin(gam*atan(1d0)/45d0)
@@ -133,7 +134,7 @@ allocate (oocr(nall))
                 yy(iall)=(yb(j)+pyb)*bby
                 zz(iall)=zs(i)
                 oocr(iall)=ocrs(i)
-                write (1,'(A,3F12.6)') as,xx(iall),yy(iall),zz(iall)
+                write (1,'(A,*(X,F0.6))') as,xx(iall),yy(iall),zz(iall)
               end do
             end do
           end do
@@ -163,7 +164,7 @@ allocate (oocr(nall))
                       yy(iall)=(yb(j)+iys+pyb)*bby
                       zz(iall)=z(i)-cc*l
                       oocr(iall)=ocr(i)
-                      write (1,'(A,3F12.6)') as,xx(iall),yy(iall),zz(iall)
+                      write (1,'(A,*(X,F0.6))') as,xx(iall),yy(iall),zz(iall)
                     end do
                   endif
                 end do
@@ -176,8 +177,8 @@ allocate (oocr(nall))
 
 ! a_bulk=(aa,0), b_bulk=(bbx,bby)
 ! a_surf=msa*a_bulk+msb*b_bulk, b_surf=nsa*a_bulk+nsb*b_bulk
-        write (1,'(2F12.5)') msa*aa+msb*bbx, msb*bby  ! (ax_surf, ay_surf)
-        write (1,'(2F12.5)') nsa*aa+nsb*bbx, nsb*bby  ! (bx_surf, by_surf)
+        write (1,'(F0.6,X,F0.6)') msa*aa+msb*bbx, msb*bby  ! (ax_surf, ay_surf)
+        write (1,'(F0.6,X,F0.6)') nsa*aa+nsb*bbx, nsb*bby  ! (bx_surf, by_surf)
         close (1)
 !---- find overlap
         do i=1,nall
@@ -202,9 +203,9 @@ deallocate (ielms); deallocate (ocrs)
 deallocate (xs); deallocate (ys); deallocate (zs)
 deallocate (xx); deallocate (yy); deallocate (zz); deallocate (oocr)
 !     end do
-      end
+end program xyzb
 !**********************************************************
-        subroutine extendxyz(nsg,ma,mb,na,nb,x,y,ndeg,xb,yb)
+subroutine extendxyz(nsg,ma,mb,na,nb,x,y,ndeg,xb,yb)
         implicit none
         integer :: nsg,ma,mb,na,nb,ndeg, i
         real(8) :: x,y, reduce01, s,xs(12),ys(12),xb(12),yb(12)
@@ -257,5 +258,4 @@ deallocate (xx); deallocate (yy); deallocate (zz); deallocate (oocr)
           xb(i)=ma*xs(i)+na*ys(i)
           yb(i)=mb*xs(i)+nb*ys(i)
         end do
-        return
-        end
+end subroutine extendxyz

@@ -2,15 +2,16 @@
 !       complex matrix  a*inv(b) --> a
 !     v.1:84/10  v.4 2014/2/26  T.Hanada
 !***********************************************************
-      subroutine gcmi2(n1,n,a,b)
+subroutine gcmi2(n1,n,a,b)
       implicit none
       integer :: n1,n, i,j,k,m,j1
       complex(8) :: a(n1,n),b(n1,n),c
       real(8) :: s,ab
 !---------- scaling
       do j=1,n
-        s=-1d0
-        do i=1,n
+        s=abs(dble(b(1,j)))+abs(dimag(b(1,j)))
+        m=1
+        do i=2,n
           ab=abs(dble(b(i,j)))+abs(dimag(b(i,j)))
           if (ab > s) then
             s=ab
@@ -23,9 +24,10 @@
       end do
 !---------- gauss elimination
 !----- partial pivotting
-      do j=1,n
-        s=-1d0
-        do k=j,n
+      do j=1,n-1
+        s=abs(dble(b(j,j)))+abs(dimag(b(j,j)))
+        m=j
+        do k=j+1,n
           ab=abs(dble(b(j,k)))+abs(dimag(b(j,k)))
           if (ab > s) then
             s=ab
@@ -55,11 +57,13 @@
           b(j1:n,k)=b(j1:n,k)+b(j1:n,j)*c
         end do
       end do
+!----- gauss elimination @ j=n
+      c=(1d0,0d0)/b(n,n)
+      a(1:n,n)=a(1:n,n)*c
 !---------- inverse
       do j=n-1,1,-1
         do k=j+1,n
           a(1:n,j)=a(1:n,j)-a(1:n,k)*b(k,j)
         end do
       end do
-      return
-      end
+end subroutine gcmi2

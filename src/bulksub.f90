@@ -6,97 +6,79 @@
 !**********************************************************
 !       scan range
 !**********************************************************
-        subroutine scanrg(azi,azf,daz,naz,gi,gf,dg,ng)
+subroutine scanrg(azi,azf,daz,naz,gi,gf,dg,ng)
         implicit none
         integer :: naz,ng
         real(8) :: azi,azf,daz,gi,gf,dg
-        integer, parameter :: nazm=200, ngm=200
-        real(8), parameter :: rad=atan(1d0)/45d0 ! rad=3.141592654d0/180d0
-! max # of azimuth steps :nazm
-! max # of glancing angle steps : ngm
+        real(8), parameter :: rad=atan(1d0)/45d0
         if (abs(daz) < 1d-4) then
           naz=1
         else
-          naz=int((azf-azi)/daz+0.1)+1
-          if (naz < 1) then
-            naz=1
-          else if (naz > nazm) then
-            naz=nazm
-          endif
+          naz=max(int((azf-azi)/daz+0.1d0)+1,1)
         endif
         azi=azi*rad
         daz=daz*rad
         if (abs(dg) < 1d-4) then
           ng=1
         else
-          ng=int((gf-gi)/dg+.1)+1
-          if (ng < 1) then
-            ng=1
-          else if (ng > ngm) then
-            ng=ngm
-          endif
+          ng=max(int((gf-gi)/dg+0.1d0)+1,1)
         endif
         gi=gi*rad
         dg=dg*rad
-        return
-        end
+end subroutine scanrg
 !**********************************************************
 !       groups of interacting beams in bulk layer
 !**********************************************************
-      subroutine blkibg(nb,ih,ik,nh,nk, iord,ngr,nbg)
+subroutine blkibg(nb,nh,nk,ih,ik, jorg,ngr,nbg)
       implicit none
-      integer :: nb,nh,nk,ngrm,ngr
-      integer :: ih(nb),ik(nb),iord(nb),nbg(nb)
-      integer :: ih0,ik0,i,j,k,l,m,n,jj
+      integer :: nb,nh,nk,ngr
+      integer :: ih(nb),ik(nb),jorg(nb),nbg(nb), idone(nb)
+      integer :: ih0,ik0,init,jinit,jnext,inext,iflag, i,j
 
-      do i=1,nb
-        iord(i)=i
-      end do
-
+      ngr=1
       if (nh == 1 .and. nk == 1) then
-        ngr=1
         nbg(1)=nb
+        do j=1,nb
+          jorg(j)=j
+        end do
       else
-        j=1
-        ngr=0
-
-        do
-          i=j
-          j=i+1
-          ih0=ih(i)
-          ik0=ik(i)
-          ngr=ngr+1
-          do k=i+1,nb
-            if (mod(ih(k)-ih0,nh) == 0 .and. mod(ik(k)-ik0,nk) == 0) then
-              if (k > j) then
-                l=ih(k)
-                n=ik(k)
-                m=iord(k)
-                do jj=k,j+1,-1
-                  ih(jj)=ih(jj-1)
-                  ik(jj)=ik(jj-1)
-                  iord(jj)=iord(jj-1)
-                end do
-                ih(j)=l
-                ik(j)=n
-                iord(j)=m
+        init=1
+        jinit=1
+        idone(2:nb)=0
+        do ! ngr loop
+          jorg(jinit)=init
+          jnext=jinit+1
+          idone(init)=1
+          ih0=ih(init)
+          ik0=ik(init)
+          iflag=0
+          do i=init+1,nb
+            if (idone(i) == 0) then
+              if (mod(ih(i)-ih0,nh) == 0 .and. mod(ik(i)-ik0,nk) == 0) then
+                idone(i)=1
+                jorg(jnext)=i
+                jnext=jnext+1
+              else if (iflag == 0) then
+                inext=i
+                iflag=1
               endif
-              j=j+1
             endif
           end do
-          nbg(ngr)=j-i
-          if (j > nb) return
+          nbg(ngr)=jnext-jinit
+          if (jnext > nb) return ! normally finish
+          ngr=ngr+1
+          jinit=jnext
+          init=inext
         end do
       endif
-      return
-      end
+end subroutine blkibg
 !**********************************************************
 !       bulk ghk
 !**********************************************************
-        subroutine blkghk(ngr,nbg,nvm,nv,igh,igk,nbgm,nb,ih,ik,iv)
+subroutine blkghk(ngr,nbg,nbgm,nb,ih,ik,jorg,nvm, nv,igh,igk,iv)
         implicit none
         integer :: ngr,nvm,nv,nbgm,nb
-        integer :: nbg(ngr),igh(nvm),igk(nvm),ih(nb),ik(nb),iv(nbgm,nb)
+        integer :: nbg(ngr),igh(nvm),igk(nvm),ih(nb),ik(nb),jorg(nb),iv(nbgm,nb)
         integer :: ibas,igr,iend,ih0,ik0,k,l,m,iflag
         igh(1)=0
         igk(1)=0
@@ -106,8 +88,8 @@
           iend=ibas+nbg(igr)
           do k=1+ibas,iend-1
             do l=k+1,iend
-              ih0=ih(l)-ih(k)
-              ik0=ik(l)-ik(k)
+              ih0=ih(jorg(l))-ih(jorg(k))
+              ik0=ik(jorg(l))-ik(jorg(k))
 !----------
               iflag=0
               do m=2,nv
@@ -131,5 +113,4 @@
           end do
           ibas=iend
         end do
-        return
-        end
+end subroutine blkghk

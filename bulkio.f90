@@ -6,10 +6,7 @@
 !*******************************************************************
 subroutine bulkio(inegpos,idiag,iprn)
         implicit none
-        integer, parameter :: nab=4
         complex(8), dimension(:,:),allocatable :: v,vi
-        real(8), dimension(:,:,:),allocatable :: asf
-        real(8), dimension(:,:),allocatable :: asf_a,asf_b,asf_c
         real(8), dimension(:),allocatable :: rdom,gh,gk
         real(8), dimension(:),allocatable :: Bh,Bk,Bz,da1,sap
         real(8), dimension(:),allocatable :: ocr,x,y,z
@@ -144,8 +141,7 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
         end do
 !-----------atomic scattering factor--------
 ! domain independent
-allocate (asf_a(nab,nelm)); allocate (asf_b(nab,nelm)); allocate (asf_c(nab,nelm))
-        call asfcrr(inegpos,be,wn,nelm,iz,da1,nab,asf_a,asf_b,asf_c,Bz,aa*bb*sin(gam))
+        call asfcrr(inegpos,be,wn,nelm,iz,da1,Bz,aa*bb*sin(gam))
         ghx=pi2/(aa*nh)
         ghy=-pi2/(aa*tan(gam)*nh)
         gky=pi2/(bb*sin(gam)*nk)
@@ -170,8 +166,7 @@ allocate (jorg(nb(idom))); allocate (nbg(nb(idom)))
 allocate (iv(nbgm,nb(idom)))
 allocate (igh(nvm)); allocate (igk(nvm))
         call blkghk(ngr,nbg,nbgm,nb(idom),ih(ibt),ik(ibt),jorg,nvm, nv,igh,igk,iv)
-allocate (asf(nv,nab,nelm))
-        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,nab,asf_a,asf_c,asf,Bh,Bk)
+        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,Bh,Bk)
 !----------output(1)----------
         write (1) jorg(1:nb(idom))
         write (1) ngr,nv
@@ -187,26 +182,24 @@ allocate (gh(nv)); allocate (gk(nv))
 allocate (v(nv,ns)); allocate (vi(nv,ns))
 ! bulk unit (in the 'ns' slices)
         call scpot(1,nv,nv,ns,v,vi,natm,nelm,ielm,z,0d0,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,0d0,0d0)
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,0d0,0d0)
 ! lower unit (below the 'ns' slices)
         call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,cc,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,-dx,-dy)
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,-dx,-dy)
 ! upper unit (above the 'ns' slices)
-        call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,-cc,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,dx,dy)
+        call scpot(-1,nv,nv,ns,v,vi,natm,nelm,ielm,z,-cc,dz &
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,dx,dy)
 !-----------incident beam rocking-----------
        call blkref(nv,nbgm,nb(idom),ns,v,vi,iv,dz,epsb,ngr,nbg &
                   ,ih(ibt),ik(ibt),jorg,nh,nk,ml,dx,dy,wn,ghx,ghy,gky &
                   ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn)
 deallocate (vi); deallocate (v)
 deallocate (gk); deallocate (gh)
-deallocate (asf)
 deallocate (igk); deallocate (igh)
 deallocate (iv); deallocate (nbg); deallocate (jorg)
         ibt=ibt+nb(idom)
       end do ! idom=1,ndom
 
-deallocate (asf_c); deallocate (asf_b); deallocate (asf_a)
 deallocate (z); deallocate (y); deallocate (x)
 deallocate (ocr); deallocate (ielm)
 deallocate (Bz); deallocate (Bk); deallocate (Bh)

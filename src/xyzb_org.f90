@@ -3,7 +3,7 @@
 !   bulk+surf input file --> xyz file
 !   v.1:2014/4    T.Hanada
 !*******************************************************************
-program xyz
+program xyzb
         implicit none
         real(8), dimension(:),allocatable :: ocr,x,y,z,ocrs,xs,ys,zs
         real(8), dimension(:),allocatable :: oocr,xx,yy,zz
@@ -13,16 +13,15 @@ program xyz
         integer :: nh,nk,ndom,nelm,nsg,natm,nelms,nsgs,msa,msb,nsa,nsb,natms
         integer :: iabr,iabp
         integer :: nall,iall,natoms,natomb,ndeg, ix,iy,nx,ny,l,nbl, idotb,idots,i,j
+        integer :: ixs,ixs1,ixs2,iys,iys1,iys2,ixb,iyb,Nrsb
         character sname*20,bname*20,fname*48,as*2
 !----------file open-----------
-!      do
+      do
 !----------input bulk data (3)----------
-!       write (*,'(A)') ' bulk-input-filename (end=e) ? :'
-!       read (*,'(A)') bname
-!       write (*,'(" ",A)') bname
-!       if (bname == 'e' .or. bname == 'E') stop
-!
-        bname = 'bulk.txt'
+        write (*,'(A)') ' bulk-input-filename (end=e) ? :'
+        read (*,'(A)') bname
+        write (*,'(" ",A)') bname
+        if (bname == 'e' .or. bname == 'E') stop
         open (3,file=bname,status='old')
 
         read (3,*) nh,nk,ndom
@@ -51,13 +50,11 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
         end do
         close (3)
 !----------input surface data (2)----------
-!       write (*,'(A)') ' surface-input-filename ? :'
-!       read (*,'(A)') sname
-!       write (*,'(" ",A)') sname
-!
-        sname='surf.txt'
+        write (*,'(A)') ' surface-input-filename ? :'
+        read (*,'(A)') sname
+        write (*,'(" ",A)') sname
         open (2,file=sname,status='old')
-!
+
 ! surface atomic parameters
         read (2,*) nelms
 allocate (izs(nelms))
@@ -89,7 +86,7 @@ allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
         endif
         fname=sname(:idots)//'-'//bname(:idotb)//'.xyz'
 
-        write (*,'(" ",A)') fname
+!       write (*,'(" ",A)') fname
         open (1,file=fname)
 !---- count atoms
         natoms=0
@@ -108,7 +105,8 @@ allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
         read (*,*) nx,ny,nbl
         write (*,*) nx,ny,nbl
 
-        nall=(natoms+natomb*nbl)*nx*ny
+        Nrsb=abs(msa*nsb-msb*nsa)
+        nall=(natoms+natomb*nbl*Nrsb)*nx*ny
         write (1,'(I0)') nall
         write (1,'(A," / ",A)') trim(sname),trim(bname)
 
@@ -118,6 +116,7 @@ allocate (xs(natms)); allocate (ys(natms)); allocate (zs(natms))
 allocate (xx(nall)); allocate (yy(nall)); allocate (zz(nall))
 allocate (oocr(nall))
         iall=0
+! surface
         do i=1,natms
           call extendxyz(nsgs,msa,msb,nsa,nsb,xs(i),ys(i),ndeg,xb,yb)
           call atomicsymbol(izs(ielms(i)),as)
@@ -136,7 +135,9 @@ allocate (oocr(nall))
             end do
           end do
         end do
-
+! bulk
+        ixs1=min(0,msa,nsa,msa+nsa); ixs2=max(0,msa,nsa,msa+nsa)
+        iys1=min(0,msb,nsb,msb+nsb); iys2=max(0,msb,nsb,msb+nsb)
         do l=1,nbl
           do i=1,natm
             xbl=x(i)-dxs-dx*(l-1)
@@ -144,21 +145,36 @@ allocate (oocr(nall))
             call extendxyz(nsg,1,0,0,1,xbl,ybl,ndeg,xb,yb)
             call atomicsymbol(iz(ielm(i)),as)
             do ix=0,nx-1
-              pxa=dble(ix)
+              pxa=dble(msa*ix); pxb=dble(msb*ix)
               do iy=0,ny-1
-                pyb=dble(iy)
-                do j=1,ndeg
-                  iall=iall+1
-                  xx(iall)=(xb(j)+pxa)*aa+(yb(j)+pyb)*bbx
-                  yy(iall)=(yb(j)+pyb)*bby
-                  zz(iall)=z(i)-cc*l
-                  oocr(iall)=ocr(i)
-                  write (1,'(A,*(X,F0.6))') as,xx(iall),yy(iall),zz(iall)
+                pya=pxa+dble(nsa*iy); pyb=pxb+dble(nsb*iy)
+                do ixs=ixs1,ixs2
+                do iys=iys1,iys2
+                  ixb=ixs*nsb-iys*nsa
+                  iyb=iys*msa-ixs*msb
+                  if (0 <= ixb .and. ixb < Nrsb .and. &
+                      0 <= iyb .and. iyb < Nrsb ) then
+                    do j=1,ndeg
+                      iall=iall+1
+                      xx(iall)=(xb(j)+ixs+pya)*aa+(yb(j)+iys+pyb)*bbx
+                      yy(iall)=(yb(j)+iys+pyb)*bby
+                      zz(iall)=z(i)-cc*l
+                      oocr(iall)=ocr(i)
+                      write (1,'(A,*(X,F0.6))') as,xx(iall),yy(iall),zz(iall)
+                    end do
+                  endif
+                end do
                 end do
               end do
             end do
           end do
         end do
+        if (iall /= nall) write (*,*) ' unexpected total # of atoms ',iall,nall
+
+! a_bulk=(aa,0), b_bulk=(bbx,bby)
+! a_surf=msa*a_bulk+msb*b_bulk, b_surf=nsa*a_bulk+nsb*b_bulk
+        write (1,'(F0.6,X,F0.6)') msa*aa+msb*bbx, msb*bby  ! (ax_surf, ay_surf)
+        write (1,'(F0.6,X,F0.6)') nsa*aa+nsb*bbx, nsb*bby  ! (bx_surf, by_surf)
         close (1)
 !---- find overlap
         do i=1,nall
@@ -182,8 +198,8 @@ deallocate (izs)
 deallocate (ielms); deallocate (ocrs)
 deallocate (xs); deallocate (ys); deallocate (zs)
 deallocate (xx); deallocate (yy); deallocate (zz); deallocate (oocr)
-!     end do
-end program xyz
+      end do
+end program xyzb
 !**********************************************************
 subroutine extendxyz(nsg,ma,mb,na,nb,x,y,ndeg,xb,yb)
         implicit none

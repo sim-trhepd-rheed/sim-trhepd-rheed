@@ -6,10 +6,7 @@
 !*******************************************************************
 subroutine surfioU
         implicit none
-        integer, parameter :: nab=4
         complex(8), dimension(:,:),allocatable :: v,vi
-        real(8), dimension(:,:,:),allocatable :: asf
-        real(8), dimension(:,:),allocatable :: asf_a,asf_b,asf_c
         real(8), dimension(:),allocatable :: rdom,wdom,gh,gk
         real(8), dimension(:),allocatable :: Bh,Bk,Bz,da1,sap
         real(8), dimension(:),allocatable :: ocr,x,y,z
@@ -97,8 +94,7 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
 !!!
 !-----------atomic scattering factor--------
 ! domain independent
-allocate (asf_a(nab,nelm)); allocate (asf_b(nab,nelm)); allocate (asf_c(nab,nelm))
-        call asfcrr(inegpos,be,wn,nelm,iz,da1,nab,asf_a,asf_b,asf_c,Bz,aa*bb*sin(gam))
+        call asfcrr(inegpos,be,wn,nelm,iz,da1,Bz,aa*bb*sin(gam))
         ghx=(pi+pi)/(aa*nh)
         ghy=-(pi+pi)/(aa*tan(gam)*nh)
         gky=(pi+pi)/(bb*sin(gam)*nk)
@@ -123,8 +119,7 @@ allocate (igh(nvm)); allocate (igk(nvm))
 !-----------scattering vector & atomic scattering factor--------
 allocate (iv(nb(idom),nb(idom)))
         call srfghk(nvm,nvb,nb(idom),ih(ibt),ik(ibt), nv,igh,igk,iv)
-allocate (asf(nv,nab,nelm))
-        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,nab,asf_a,asf_c,asf,Bh,Bk)
+        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,Bh,Bk)
 !!!        if (iprn >= 0) write (4,'(A,I0)') 'nv = ',nv
 !-----------elements of scattering matrix : v/vi----------
 allocate (gh(nv)); allocate (gk(nv))
@@ -135,15 +130,15 @@ allocate (gh(nv)); allocate (gk(nv))
 allocate (v(nv,ns)); allocate (vi(nv,ns))
 ! surface reconstructed layer
         call scpot(1,nv,nv,ns,v,vi,natms,nelm,ielm,z &
-             ,-cc,dz,nab,asf,asf_b,sap,nsgs,msa,msb,nsa,nsb,gh,gk &
+             ,-cc,dz,sap,nsgs,msa,msb,nsa,nsb,gh,gk &
              ,ocr,x,y,dxs+dxb,dys+dyb)
 ! topmost bulk unit layer (in the 'ns' slices)
         call scpot(0,nv,nvb,ns,v,vi,natmb,nelm,ielm(natms+1),z(natms+1) &
-          ,0d0,dz,nab,asf,asf_b,sap,nsgb,1,0,0,1,gh,gk &
+          ,0d0,dz,sap,nsgb,1,0,0,1,gh,gk &
           ,ocr(natms+1),x(natms+1),y(natms+1),dxb,dyb)
 ! second bulk unit layer (below the 'ns' slices)
-        call scpot(0,nv,nvb,ns,v,vi,natmb,nelm,ielm(natms+1),z(natms+1) &
-          ,cc,dz,nab,asf,asf_b,sap,nsgb,1,0,0,1,gh,gk &
+        call scpot(-1,nv,nvb,ns,v,vi,natmb,nelm,ielm(natms+1),z(natms+1) &
+          ,cc,dz,sap,nsgb,1,0,0,1,gh,gk &
           ,ocr(natms+1),x(natms+1),y(natms+1),0d0,0d0)
 !!!-----------output U00----------
       zout=0.5d0*dz-cc ! one bulk unit is added below surface layer
@@ -154,13 +149,11 @@ allocate (v(nv,ns)); allocate (vi(nv,ns))
 !!!
 deallocate (vi); deallocate (v)
 deallocate (gk); deallocate (gh)
-deallocate (asf)
 deallocate (iv); deallocate (igk); deallocate (igh)
 deallocate (nbg); deallocate (jorg)
 !!!        ibt=ibt+nb(idom)
 !!!      end do ! idom=1,ndom
 
-deallocate (asf_c); deallocate (asf_b); deallocate (asf_a)
 deallocate (z); deallocate (y); deallocate (x)
 deallocate (ocr); deallocate (ielm)
 deallocate (Bz); deallocate (Bk); deallocate (Bh)

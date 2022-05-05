@@ -2,7 +2,12 @@
 !   rheed multislice method :  structure factor
 !    v.3    90/4/12   v.4:2014/4    T.Hanada
 !**********************************************************
-        subroutine strfac(nsg,nv,ma,mb,na,nb,gh,gk,x,y,dx,dy,st)
+module TOLconst
+        implicit none
+        real(8), parameter :: TOL = 2d-3
+end module TOLconst
+
+subroutine strfac(nsg,nv,ma,mb,na,nb,gh,gk,x,y,dx,dy,st)
         implicit none
         integer :: nsg,nv,ma,mb,na,nb, ndeg,m,i
         complex(8) :: st(nv)
@@ -67,55 +72,53 @@
             st(m)=st(m)+dcmplx(cos(gr),sin(gr))
           end do
         end do
-        return
-        end
+end subroutine strfac
 !**********************************************************
 !       subtract integer part to let -1d-4 <= reduce01 < 1-1d-4
 !**********************************************************
-        real(8) function reduce01(x)
+real(8) function reduce01(x)
         real(8) :: x
         reduce01=x-floor(x+1d-4)
-        return
-        end
+end function reduce01
 !**********************************************************
 !       p211, nsg=2
 !**********************************************************
-        subroutine p211(xs,ys,ndeg)
+subroutine p211(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(2),ys(2)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) .and. &
-             (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .or. abs(x-0.5d0) < TOL) .and. &
+             (abs(y) < TOL .or. abs(y-0.5d0) < TOL) ) then
           ndeg=1 ! twofold axis
         else
           ndeg=2
           xs(2)=-x; ys(2)=-y
         endif
-        return
-        end
+end subroutine p211
 !**********************************************************
 !       p1m1, nsg=3
 !**********************************************************
-        subroutine p1m1(xs,ys,ndeg)
+subroutine p1m1(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(2),ys(2)
 
         x=xs(1); y=ys(1)
-        if (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) then
+        if (abs(y) < TOL .or. abs(y-0.5d0) < TOL) then
           ndeg=1 ! mirror plane
         else
           ndeg=2
           xs(2)=x; ys(2)=-y
         endif
-        return
-        end
+end subroutine p1m1
 !**********************************************************
 !       p1g1, nsg=4
 !**********************************************************
-        subroutine p1g1(xs,ys,ndeg)
+subroutine p1g1(xs,ys,ndeg)
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(2),ys(2)
@@ -123,18 +126,18 @@
         x=xs(1); y=ys(1)
         ndeg=2
         xs(2)=x+0.5d0; ys(2)=-y
-        return
-        end
+end subroutine p1g1
 !**********************************************************
 !       c1m1, nsg=5
 !**********************************************************
-        subroutine c1m1(xs,ys,ndeg)
+subroutine c1m1(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(4),ys(4)
 
         x=xs(1); y=ys(1)
-        if (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) then
+        if (abs(y) < TOL .or. abs(y-0.5d0) < TOL) then
           ndeg=2 ! mirror plane
           xs(2)=x+0.5d0; ys(2)=0.5d0-y
         else
@@ -143,24 +146,24 @@
           xs(3)=x;       ys(3)=-y
           xs(4)=x+0.5d0; ys(4)=0.5d0+y
         endif
-        return
-        end
+end subroutine c1m1
 !**********************************************************
 !       p2mm, nsg=6
 !**********************************************************
-        subroutine p2mm(xs,ys,ndeg)
+subroutine p2mm(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(4),ys(4)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) .and. &
-             (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .or. abs(x-0.5d0) < TOL) .and. &
+             (abs(y) < TOL .or. abs(y-0.5d0) < TOL) ) then
           ndeg=1 ! twofold axis
-        else if (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) then
+        else if (abs(x) < TOL .or. abs(x-0.5d0) < TOL) then
           ndeg=2 ! mirror plane along y
           xs(2)=x; ys(2)=-y
-        else if (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) then
+        else if (abs(y) < TOL .or. abs(y-0.5d0) < TOL) then
           ndeg=2 ! mirror plane along x
           xs(2)=-x; ys(2)=y
         else
@@ -169,22 +172,22 @@
           xs(3)=-x; ys(3)=y
           xs(4)=-x; ys(4)=-y
         endif
-        return
-        end
+end subroutine p2mm
 !**********************************************************
 !       p2mg, nsg=7
 !**********************************************************
-        subroutine p2mg(xs,ys,ndeg)
+subroutine p2mg(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(4),ys(4)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) .and. &
-             (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .or. abs(x-0.5d0) < TOL) .and. &
+             (abs(y) < TOL .or. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis
           xs(2)=x;  ys(2)=0.5d0-y
-        else if (abs(y-0.25d0) < 2d-4 .or. abs(y-0.75d0) < 2d-4) then
+        else if (abs(y-0.25d0) < TOL .or. abs(y-0.75d0) < TOL) then
           ndeg=2 ! mirror plane
           xs(2)=-x; ys(2)=-y
         else
@@ -193,19 +196,19 @@
           xs(3)=-x; ys(3)=-y
           xs(4)=-x; ys(4)=0.5d0+y
         endif
-        return
-        end
+end subroutine p2mg
 !**********************************************************
 !       p2gg, nsg=8
 !**********************************************************
-        subroutine p2gg(xs,ys,ndeg)
+subroutine p2gg(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(4),ys(4)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) .and. &
-             (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .or. abs(x-0.5d0) < TOL) .and. &
+             (abs(y) < TOL .or. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis
           xs(2)=0.5d0-x; ys(2)=0.5d0+y
         else
@@ -214,33 +217,33 @@
           xs(3)=0.5d0+x; ys(3)=0.5d0-y
           xs(4)=-x;      ys(4)=-y
         endif
-        return
-        end
+end subroutine p2gg
 !**********************************************************
 !       c2mm, nsg=9
 !**********************************************************
-        subroutine c2mm(xs,ys,ndeg)
+subroutine c2mm(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(8),ys(8)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) .and. &
-             (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .or. abs(x-0.5d0) < TOL) .and. &
+             (abs(y) < TOL .or. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis at m-cross
           xs(2)=0.5d0-x; ys(2)=0.5d0+y
-        else if ( (abs(x-0.25d0) < 2d-4 .or. abs(x-0.75d0) < 2d-4) .and. &
-                  (abs(y-0.25d0) < 2d-4 .or. abs(y-0.75d0) < 2d-4) ) then
+        else if ( (abs(x-0.25d0) < TOL .or. abs(x-0.75d0) < TOL) .and. &
+                  (abs(y-0.25d0) < TOL .or. abs(y-0.75d0) < TOL) ) then
           ndeg=4 ! twofold axis at g-cross
           xs(2)=x;       ys(2)=-y
           xs(3)=-x;      ys(3)=y
           xs(4)=-x;      ys(4)=-y
-        else if (abs(x) < 2d-4 .or. abs(x-0.5d0) < 2d-4) then
+        else if (abs(x) < TOL .or. abs(x-0.5d0) < TOL) then
           ndeg=4 ! mirror plane along y
           xs(2)=x;       ys(2)=-y
           xs(3)=0.5d0-x; ys(3)=0.5d0+y
           xs(4)=0.5d0-x; ys(4)=0.5d0-y
-        else if (abs(y) < 2d-4 .or. abs(y-0.5d0) < 2d-4) then
+        else if (abs(y) < TOL .or. abs(y-0.5d0) < TOL) then
           ndeg=4 ! mirror plane along x
           xs(2)=-x;      ys(2)=y
           xs(3)=0.5d0+x; ys(3)=0.5d0-y
@@ -255,22 +258,22 @@
           xs(7)=0.5d0-x; ys(7)=0.5d0+y
           xs(8)=0.5d0-x; ys(8)=0.5d0-y
         endif
-        return
-        end
+end subroutine c2mm
 !**********************************************************
 !       p4, nsg=10
 !**********************************************************
-        subroutine p4(xs,ys,ndeg)
+subroutine p4(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(4),ys(4)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .and. abs(y) < 2d-4) .or. &
-             (abs(x-0.5d0) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .and. abs(y) < TOL) .or. &
+             (abs(x-0.5d0) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=1 ! fourfold axis
-        else if ( (abs(x-0.5d0) < 2d-4 .and. abs(y) < 2d-4) .or. &
-                  (abs(x) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        else if ( (abs(x-0.5d0) < TOL .and. abs(y) < TOL) .or. &
+                  (abs(x) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis
           xs(2)=y;       ys(2)=-x
         else
@@ -279,27 +282,27 @@
           xs(3)=-x; ys(3)=-y
           xs(4)=y;  ys(4)=-x
         endif
-        return
-        end
+end subroutine p4
 !**********************************************************
 !       p4mm, nsg=11
 !**********************************************************
-        subroutine p4mm(xs,ys,ndeg)
+subroutine p4mm(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(8),ys(8)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .and. abs(y) < 2d-4) .or. &
-             (abs(x-0.5d0) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .and. abs(y) < TOL) .or. &
+             (abs(x-0.5d0) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=1 ! fourfold axis
-        else if ( (abs(x-0.5d0) < 2d-4 .and. abs(y) < 2d-4) .or. &
-                  (abs(x) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        else if ( (abs(x-0.5d0) < TOL .and. abs(y) < TOL) .or. &
+                  (abs(x) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis
           xs(2)=y;  ys(2)=x
-        else if (abs(y-x) < 2d-4 .or. abs(x+y-1d0) < 2d-4 .or. &
-                 abs(x) < 2d-4   .or. abs(x-0.5d0) < 2d-4 .or. &
-                 abs(y) < 2d-4   .or. abs(y-0.5d0) < 2d-4) then
+        else if (abs(y-x) < TOL .or. abs(x+y-1d0) < TOL .or. &
+                 abs(x) < TOL   .or. abs(x-0.5d0) < TOL .or. &
+                 abs(y) < TOL   .or. abs(y-0.5d0) < TOL) then
           ndeg=4 ! mirror plane
           xs(2)=-y; ys(2)=x
           xs(3)=-x; ys(3)=-y
@@ -314,27 +317,27 @@
           xs(7)=y;  ys(7)=-x
           xs(8)=x;  ys(8)=-y
         endif
-        return
-        end
+end subroutine p4mm
 !**********************************************************
 !       p4gm, nsg=12
 !**********************************************************
-        subroutine p4gm(xs,ys,ndeg)
+subroutine p4gm(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(8),ys(8)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .and. abs(y) < 2d-4) .or. &
-             (abs(x-0.5d0) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .and. abs(y) < TOL) .or. &
+             (abs(x-0.5d0) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! fourfold axis
           xs(2)=0.5d0-y; ys(2)=0.5d0-x
-        else if ( (abs(x-0.5d0) < 2d-4 .and. abs(y) < 2d-4) .or. &
-                  (abs(x) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        else if ( (abs(x-0.5d0) < TOL .and. abs(y) < TOL) .or. &
+                  (abs(x) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=2 ! twofold axis
           xs(2)=y;  ys(2)=-x
-        else if (abs(y-x+0.5d0) < 2d-4 .or. abs(y-x-0.5d0) < 2d-4 .or. &
-                 abs(x+y-0.5d0) < 2d-4 .or. abs(x+y-1.5d0) < 2d-4) then
+        else if (abs(y-x+0.5d0) < TOL .or. abs(y-x-0.5d0) < TOL .or. &
+                 abs(x+y-0.5d0) < TOL .or. abs(x+y-1.5d0) < TOL) then
           ndeg=4 ! mirror plane
           xs(2)=-y; ys(2)=x
           xs(3)=-x; ys(3)=-y
@@ -349,44 +352,44 @@
           xs(7)=0.5d0+y; ys(7)=0.5d0+x
           xs(8)=0.5d0-x; ys(8)=0.5d0+y
         endif
-        return
-        end
+end subroutine p4gm
 !**********************************************************
 !       p3, nsg=13
 !**********************************************************
-        subroutine p3(xs,ys,ndeg)
+subroutine p3(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(3),ys(3)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .and. abs(y) < 2d-4) .or. &
-             (abs(x-1d0/3d0) < 2d-4 .and. abs(y-2d0/3d0) < 2d-4) .or. &
-             (abs(x-2d0/3d0) < 2d-4 .and. abs(y-1d0/3d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .and. abs(y) < TOL) .or. &
+             (abs(x-1d0/3d0) < TOL .and. abs(y-2d0/3d0) < TOL) .or. &
+             (abs(x-2d0/3d0) < TOL .and. abs(y-1d0/3d0) < TOL) ) then
           ndeg=1 ! threefold axis
         else
           ndeg=3
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
         endif
-        return
-        end
+end subroutine p3
 !**********************************************************
 !       p3m1, nsg=14
 !**********************************************************
-        subroutine p3m1(xs,ys,ndeg)
+subroutine p3m1(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(6),ys(6)
 
         x=xs(1); y=ys(1)
-        if ( (abs(x) < 2d-4 .and. abs(y) < 2d-4) .or. &
-             (abs(x-1d0/3d0) < 2d-4 .and. abs(y-2d0/3d0) < 2d-4) .or. &
-             (abs(x-2d0/3d0) < 2d-4 .and. abs(y-1d0/3d0) < 2d-4) ) then
+        if ( (abs(x) < TOL .and. abs(y) < TOL) .or. &
+             (abs(x-1d0/3d0) < TOL .and. abs(y-2d0/3d0) < TOL) .or. &
+             (abs(x-2d0/3d0) < TOL .and. abs(y-1d0/3d0) < TOL) ) then
           ndeg=1 ! threefold axis
-        else if ( abs(x+x-y) < 2d-4 .or. abs(y+y-x) < 2d-4 &
-             .or. abs(x+x-y-1d0) < 2d-4 .or. abs(y+y-x-1d0) < 2d-4 &
-             .or. abs(x+y-1d0) < 2d-4 ) then
+        else if ( abs(x+x-y) < TOL .or. abs(y+y-x) < TOL &
+             .or. abs(x+x-y-1d0) < TOL .or. abs(y+y-x-1d0) < TOL &
+             .or. abs(x+y-1d0) < TOL ) then
           ndeg=3 ! mirror plane
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
@@ -398,24 +401,24 @@
           xs(5)=y-x; ys(5)=-x
           xs(6)=-y;  ys(6)=-x
         endif
-        return
-        end
+end subroutine p3m1
 !**********************************************************
 !       p31m, nsg=15
 !**********************************************************
-        subroutine p31m(xs,ys,ndeg)
+subroutine p31m(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(6),ys(6)
 
         x=xs(1); y=ys(1)
-        if (abs(x) < 2d-4 .and. abs(y) < 2d-4) then
+        if (abs(x) < TOL .and. abs(y) < TOL) then
           ndeg=1 ! threefold axis at (0,0)
-        else if ( (abs(x-1d0/3d0) < 2d-4 .and. abs(y-2d0/3d0) < 2d-4) &
-             .or. (abs(x-2d0/3d0) < 2d-4 .and. abs(y-1d0/3d0) < 2d-4) ) then
+        else if ( (abs(x-1d0/3d0) < TOL .and. abs(y-2d0/3d0) < TOL) &
+             .or. (abs(x-2d0/3d0) < TOL .and. abs(y-1d0/3d0) < TOL) ) then
           ndeg=2 ! threefold axis
           xs(2)=y;   ys(2)=x
-        else if (abs(x) < 2d-4 .or. abs(y) < 2d-4 .or. abs(x-y) < 2d-4) then
+        else if (abs(x) < TOL .or. abs(y) < TOL .or. abs(x-y) < TOL) then
           ndeg=3 ! mirror plane
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
@@ -427,26 +430,26 @@
           xs(5)=y-x; ys(5)=-x
           xs(6)=x-y; ys(6)=-y
         endif
-        return
-        end
+end subroutine p31m
 !**********************************************************
 !       p6, nsg=16
 !**********************************************************
-        subroutine p6(xs,ys,ndeg)
+subroutine p6(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(6),ys(6)
 
         x=xs(1); y=ys(1)
-        if (abs(x) < 2d-4 .and. abs(y) < 2d-4) then
+        if (abs(x) < TOL .and. abs(y) < TOL) then
           ndeg=1 ! sixfold axis
-        else if ( (abs(x-1d0/3d0) < 2d-4 .and. abs(y-2d0/3d0) < 2d-4) &
-             .or. (abs(x-2d0/3d0) < 2d-4 .and. abs(y-1d0/3d0) < 2d-4) ) then
+        else if ( (abs(x-1d0/3d0) < TOL .and. abs(y-2d0/3d0) < TOL) &
+             .or. (abs(x-2d0/3d0) < TOL .and. abs(y-1d0/3d0) < TOL) ) then
           ndeg=2 ! threefold axis
           xs(2)=y;   ys(2)=x
-        else if ( (abs(x-0.5d0) < 2d-4 .and. abs(y) < 2d-4) .or. &
-                  (abs(x) < 2d-4 .and. abs(y-0.5d0) < 2d-4) .or. &
-                  (abs(x-0.5d0) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        else if ( (abs(x-0.5d0) < TOL .and. abs(y) < TOL) .or. &
+                  (abs(x) < TOL .and. abs(y-0.5d0) < TOL) .or. &
+                  (abs(x-0.5d0) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=3 ! twofold axis
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
@@ -458,30 +461,30 @@
           xs(5)=y-x; ys(5)=-x
           xs(6)=y;   ys(6)=y-x
         endif
-        return
-        end
+end subroutine p6
 !**********************************************************
 !       p6mm, nsg=17
 !**********************************************************
-        subroutine p6mm(xs,ys,ndeg)
+subroutine p6mm(xs,ys,ndeg)
+        use TOLconst
         implicit none
         integer :: ndeg
         real(8) :: x,y, xs(12),ys(12)
 
         x=xs(1); y=ys(1)
-        if (abs(x) < 2d-4 .and. abs(y) < 2d-4) then
+        if (abs(x) < TOL .and. abs(y) < TOL) then
           ndeg=1 ! sixfold axis
-        else if ( (abs(x-1d0/3d0) < 2d-4 .and. abs(y-2d0/3d0) < 2d-4) &
-             .or. (abs(x-2d0/3d0) < 2d-4 .and. abs(y-1d0/3d0) < 2d-4) ) then
+        else if ( (abs(x-1d0/3d0) < TOL .and. abs(y-2d0/3d0) < TOL) &
+             .or. (abs(x-2d0/3d0) < TOL .and. abs(y-1d0/3d0) < TOL) ) then
           ndeg=2 ! threefold axis
           xs(2)=y;   ys(2)=x
-        else if ( (abs(x-0.5d0) < 2d-4 .and. abs(y) < 2d-4) .or. &
-                  (abs(x) < 2d-4 .and. abs(y-0.5d0) < 2d-4) .or. &
-                  (abs(x-0.5d0) < 2d-4 .and. abs(y-0.5d0) < 2d-4) ) then
+        else if ( (abs(x-0.5d0) < TOL .and. abs(y) < TOL) .or. &
+                  (abs(x) < TOL .and. abs(y-0.5d0) < TOL) .or. &
+                  (abs(x-0.5d0) < TOL .and. abs(y-0.5d0) < TOL) ) then
           ndeg=3 ! twofold axis
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
-        else if (abs(x) < 2d-4 .or. abs(y) < 2d-4 .or. abs(x-y) < 2d-4) then
+        else if (abs(x) < TOL .or. abs(y) < TOL .or. abs(x-y) < TOL) then
           ndeg=6 ! mirror plane
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
@@ -502,5 +505,4 @@
           xs(11)=y;   ys(11)=y-x
           xs(12)=x-y; ys(12)=-y
         endif
-        return
-        end
+end subroutine p6mm

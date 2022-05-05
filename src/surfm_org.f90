@@ -3,19 +3,20 @@
 !   subroutine surfio
 !   v.1:84/10   v.2:86/11   v.3:90/4   v.4:2014/4    T.Hanada
 !*******************************************************************
-        program surf
+program surf
         integer :: iprn,idotb,idots,ndom
         character bname*20,sname*20,fname*44,dname*46,yn*1
         integer :: date_time(8)
         character*10 cdate,ctime,czone
-!        write (*,'(A)') ' sequence-filename (console=return) ? '
-!        read (*,'(A)') fname
-!        if (fname /= ' ') open (5,file=fname)
+        real(4) :: etime,etime1,etime2(2)
 !---------------------
-      iprn=0
+      iprn=-1
+    if (iprn >= 0) then
       call date_and_time(cdate,ctime,czone, date_time)
       open (4,file='SURF'//cdate(:8)//'-'//ctime(:6)//'log.txt')
+    endif
 !----------beam loop-----------
+    etime1=etime(etime2)
     do
       write (*,'(A)') ' bulk-filename (end=e) ? :'
       read (*,'(A)') bname
@@ -60,10 +61,12 @@
         write (*,'(" ",A)') fname
         open (3,file=fname)
 
+      if (iprn >= 0) then
         write (4,'(A)') '----------------------------------'
-        write (4,'(2A)') 'BULK output: ',bname
-        write (4,'(2A)') 'SURF input : ',sname
-        write (4,'(2A)') 'SURF output: ',fname
+        write (4,'(2A)') 'BULK output: ',trim(bname)
+        write (4,'(2A)') 'SURF input : ',trim(sname)
+        write (4,'(2A)') 'SURF output: ',trim(fname)
+      endif
 !----------main routine----------
         rewind 1
         call surfio(iprn)
@@ -75,9 +78,12 @@
           dname=sname(:idots)//'-'//bname(:idotb)//'.s'
           write (*,'(" ",A)') dname
           open (3,file=dname)
-          write (4,'(2A)') 'domainsum output: ',dname
+          if (iprn >= 0) write (4,'(2A)') 'domainsum output: ',trim(dname)
           call domainsum(ndom)
         endif
+        etime1=etime(etime2)
+        print *, 'elapsed(sec):', etime1, ', user:', etime2(1), ', sys:', etime2(2)
       end do
     end do
-    end
+    if (iprn >= 0) close (4)
+end program surf

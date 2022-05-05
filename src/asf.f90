@@ -4,10 +4,10 @@
 !   P.A. Doyle and P.S. Turner, Acta Cryst. A24 (1968) 390.
 !   v.4:2014/4    T.Hanada
 !***********************************************************
-       subroutine asfparam(iz,iabr,nabr, a, b)
+subroutine asfparam(iz, a, b)
        IMPLICIT none
-       integer iz,iabr,nabr, i
-       real(8) :: a(5), b(5)
+       integer iz, i
+       real(8) :: a(4), b(4)
        real(8) :: ap(4, 98), bp(4, 98), ad(4, 98), bd(4, 98)
 
 ! L.-M. Peng,  Micron 30 (1999) 625.
@@ -412,29 +412,27 @@ data bd / &
 0d0, 0d0, 0d0, 0d0,  &
 0d0, 0d0, 0d0, 0d0/
 
-if (iabr.eq.0) then                      ! Doyle & Turner
+if (1 <= iz .and. iz <= 98) then ! Doyle & Turner
   if (ad(1,iz) > 1d-5) then
-    nabr=4
     a(1:4)=ad(1:4, iz); b(1:4)=bd(1:4, iz)
     return
   endif
 endif
 
+iz=iabs(iz)
 if (1 <= iz .and. iz <= 98) then         ! Peng
-  nabr=4
   do i=1,4
     a(i)=ap(5-i, iz); b(i)=bp(5-i, iz)   ! let b(1) be largest
   end do
 else
-  nabr=0
+    a(1)=-1d0
 endif
 
-return
-end
+end subroutine asfparam
 !********************************************************
 ! atomic mass
 !********************************************************
-       real(8) function amass(iz)
+real(8) function amass(iz)
        IMPLICIT none
        integer iz
        real(8) :: am(110)
@@ -469,12 +467,11 @@ else
     amass=1000d0
 endif
 
-return
-end
+end function amass
 !********************************************************
 ! atomic symbol
 !********************************************************
-        subroutine atomicsymbol(iz,as)
+subroutine atomicsymbol(iz,as)
         implicit none
         integer :: iz
         character(2) at(110),as
@@ -497,5 +494,4 @@ else
     as='??'
 endif
 
-return
-end
+end subroutine atomicsymbol
