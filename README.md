@@ -2,13 +2,13 @@
 
 ## Overview
 
-The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1] and [2], if you use the software in a research paper. The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[3]. The present package contains Fortran codes in the src/ directory and Python3 scripts in the tool/ directory. The present README file is assumed to be built with gfortran in a standard Linux environment.
+The software 'sim-trhepd-rheed' is a simulator for total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED).Please cite Ref. [1] and, if possible, [2], when you use the software in a research paper. The software was written originally by Takashi Hanada and the present package on github is maintained by Takeo Hoshi. The software is based on the theory written in Ref.[3]. The present package contains Fortran codes in the src/ directory and Python3 scripts in the tool/ directory. The present README file is assumed to be built with gfortran in a standard Linux environment.
 
 Refernce list
 
-[1] T. Hanada, H. Daimon, and S. Ino， Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(√3 × √3 )R30°-Al, -Ga, and -In surfaces,  Phys. Rev. B 51, 13320–13325 (1995).
+[1] T. Hanada, Y. Motoyama, K. Yoshimi, T. Hoshi, sim-trhepd-rheed -- Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), Computer Physics Communications 277, 108371/1-10 (2022);   https://doi.org/10.1016/j.cpc.2022.108371; preprint: https://arxiv.org/abs/2110.09477
 
-[2] T. Hanada, Y. Motoyama, K. Yoshimi, T. Hoshi, sim-trhepd-rheed -- Open-source simulator of total-reflection high-energy positron diffraction (TRHEPD) and reflection high-energy electron diffraction (RHEED), Computer Physics Communications, in press; preprint: https://arxiv.org/abs/2110.09477
+[2] T. Hanada, H. Daimon, and S. Ino， Rocking-curve analysis of reflection high-energy electron diffraction from the Si(111)-(√3 × √3 )R30°-Al, -Ga, and -In surfaces,  Phys. Rev. B 51, 13320–13325 (1995).
 
 [3] A. Ichimiya, Many-beam calculation of reflection high energy electron diffraction (RHEED) intensities by the multi-slice method, Jpn. J. Appl. Phys. 22, 176-180 (1983).
 
