@@ -14,13 +14,26 @@ subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
         integer :: nv,nbgm,nb,ns,ngr,nh,nk,ml,naz,ng,idiag,iprn
 
         complex(8) :: t1(nbgm+nbgm,nbgm+nbgm),t2(nbgm+nbgm,nbgm+nbgm)
-        complex(8) :: t3(nbgm+nbgm,nbgm+nbgm),t4(nbgm+nbgm,nbgm+nbgm),gma(nbgm),ph
+        complex(8) :: t3(nbgm+nbgm,nbgm+nbgm),t4(nbgm+nbgm,nbgm+nbgm)
+        complex(8) :: gma(nbgm),ph(nb)
         real(8) :: r20(nbgm)
         real(8) :: az,caz,saz,ga,cga,wnx,wny,wgx,wgy,s,pih,pik,rmax,r2,rat
-        integer :: nbgm2,nrep1,nrep2,irep1,irep2,ibas,igr,nbf,nbf2,i,i2,j,j2,k,l
+        integer :: nrep1,nrep2,irep1,irep2,ibas,igr,nbf,nbf2,iphflg
+        integer :: i,i2,j,j2,k,l
         real(8), parameter :: pi2=atan(1d0)*8d0
 
-        nbgm2=nbgm+nbgm
+        if (abs(dx) > 1d-4 .or. abs(dy) > 1d-4) then
+          iphflg=1
+          pih=dx*pi2/nh
+          pik=dy*pi2/nk
+          do j=1,nb
+            s=pih*ih(j)+pik*ik(j)
+            ph(j)=dcmplx(cos(s),sin(s))
+          end do
+        else
+          iphflg=0
+        endif
+
         if (ng > naz) then
           nrep1=naz
           nrep2=ng
@@ -84,15 +97,11 @@ subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
           endif
         end do
 !-----------transfer matrix of unit layer (t3)-----------
-        if (abs(dx) > 1d-4 .or. abs(dy) > 1d-4) then
-          pih=dx*pi2/nh
-          pik=dy*pi2/nk
+        if (iphflg == 1) then
           do j=1,nbf
-            s=pih*ih(jorg(j+ibas))+pik*ik(jorg(j+ibas))
-            ph=dcmplx(cos(s),sin(s))
             j2=j+nbf
-            t3(1:nbf2,j) =t3(1:nbf2,j)*ph
-            t3(1:nbf2,j2)=t3(1:nbf2,j2)*ph
+            t3(1:nbf2,j )=t3(1:nbf2,j )*ph(jorg(j+ibas))
+            t3(1:nbf2,j2)=t3(1:nbf2,j2)*ph(jorg(j+ibas))
           end do
         endif
 !----------diffraction from bulk layer----------
@@ -112,7 +121,7 @@ subroutine blkref(nv,nbgm,nb,ns,v,vi,iv,dz    &
               end do
             endif
           end do
-          call gcmi2(nbgm2,nbf,t1,t2)
+          call gcmi2(nbgm+nbgm,nbf,t1,t2)
           t4(1:nbf,1:nbf)=t1(1:nbf,1:nbf)
 !----------judgement----------
           if (l == 20) then
