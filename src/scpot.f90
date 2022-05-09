@@ -3,18 +3,36 @@
 !    v.3    90/4/12   v.4:2014/4   v.5:2022/1    T.Hanada
 !   contains asfcrr asfcef scpot
 !*******************************************************************
+module scparam
+        implicit none
+        integer, parameter :: nab=4
+        real(8), dimension(:,:,:),allocatable :: asf
+        real(8), dimension(:,:),allocatable :: a,b,c
+        integer negpos
+end module scparam
+
 !**********************************************************
 !       energy correction of atomic scattering factor
 !       domain independent
 !**********************************************************
-subroutine asfcrr(inegpos,be,wn,nelm,iz,da1,nab,a,b,c,Bz,smesh)
+subroutine asfcrr(inegpos,be,wn,nelm,iz,da1,Bz,smesh)
+        use scparam
         implicit none
-        integer :: iz(nelm),inegpos,nelm,nab
-        real(8) :: a(nab,nelm),b(nab,nelm),c(nab,nelm)
+        integer :: iz(nelm),inegpos,nelm
         real(8) :: da1(nelm),Bz(nelm),be,wn,smesh
         real(8) :: rel
         integer :: i,j
         real(8), parameter :: pi=atan(1d0)*4d0, c2m=511.001d0, ek=.262466d0
+
+        if (inegpos > 0) then
+          negpos=1
+        else
+          negpos=-1
+        endif
+if (allocated(a)) then
+  deallocate (c); deallocate (b); deallocate (a)
+endif
+allocate (a(nab,nelm)); allocate (b(nab,nelm)); allocate (c(nab,nelm))
 
         wn=sqrt(1d3*be*ek*(1d0+0.5d0*be/c2m))
         rel=(1d0+be/c2m)*4d0*pi/smesh
@@ -28,13 +46,12 @@ subroutine asfcrr(inegpos,be,wn,nelm,iz,da1,nab,a,b,c,Bz,smesh)
           if (iz(i) > 0) then
             a(1,i)=a(1,i)-da1(i)
           else
-            a(1,i)=a(1,i)*abs(da1(i))
+            a(1,i)=a(1,i)*da1(i)
           endif
-          if (inegpos > 0) a(1:nab,i)=-a(1:nab,i)   ! positron
 
           do j=1,nab
-            c(j,i)=b(j,i)/(16d0*pi*pi)
             a(j,i)=a(j,i)*sqrt(4d0*pi/(b(j,i)+Bz(i)))*rel
+            c(j,i)=b(j,i)/(16d0*pi*pi)
             b(j,i)=4d0*pi*pi/(b(j,i)+Bz(i))
           end do
         end do
@@ -42,16 +59,18 @@ end subroutine asfcrr
 !**********************************************************
 !       a.s.f. coefficient
 !**********************************************************
-subroutine asfcef(nv,nelm,igh,igk,ghx,ghy,gky &
-                         ,nab,a,c,asf,Bh,Bk)
+subroutine asfcef(nv,nelm,igh,igk,ghx,ghy,gky,Bh,Bk)
+        use scparam
         implicit none
-        integer :: igh(nv),igk(nv),nv,nelm,nab, i,j,k
+        integer :: igh(nv),igk(nv),nv,nelm, i,j,k
         real(8) :: Bh(nelm),Bk(nelm),ghx,ghy,gky
-        real(8) :: a(nab,nelm),c(nab,nelm),asf(nv,nab,nelm)
 ! let exp(-uf) -> 0
         real(8), parameter :: pi2=atan(1d0)*8d0, uf=70d0
         real(8) :: xh,yh,yk,s,xi,yi,si,ex
         real(8) :: uh(nelm),uk(nelm)
+
+if (allocated(asf)) deallocate (asf)
+allocate (asf(nv,nab,nelm))
 
 ! Bh, Bk = 8 pi^2 <u^2>
         do i=1,nelm
@@ -74,11 +93,11 @@ subroutine asfcef(nv,nelm,igh,igk,ghx,ghy,gky &
               if (ex > uf) then
                 asf(k,j,i)=0d0
               else
-                asf(k,j,i)=a(j,i)*exp(-ex) ! a < 0 for positron
+                asf(k,j,i)=a(j,i)*exp(-ex)
               endif
             end do
-          end do
-        end do
+          end do !i=1,nelm
+        end do !k=1,nv
 end subroutine asfcef
 !**********************************************************
 !       scattering potential
@@ -86,11 +105,12 @@ end subroutine asfcef
 ! mv is necessary for inclusion of the bulk top layer
 !     to evaluate the surface potential.
 subroutine scpot(iclr,mv,nv,ns,v,vi,natm,nelm,ielm,z,zo,dz &
-          ,nab,asf,b,sap,nsg,ma,mb,na,nb,gh,gk,ocr,x,y,dx,dy)
+          ,sap,nsg,ma,mb,na,nb,gh,gk,ocr,x,y,dx,dy)
+        use scparam
         implicit none
-        integer :: iclr,mv,nv,ns,natm,nelm,nab,nsg,ma,mb,na,nb
+        integer :: iclr,mv,nv,ns,natm,nelm,nsg,ma,mb,na,nb
         complex(8) :: v(mv,ns),vi(mv,ns)
-        real(8) :: asf(mv,nab,nelm),b(nab,nelm),sap(nelm),gh(nv),gk(nv)
+        real(8) :: sap(nelm),gh(nv),gk(nv)
         real(8) :: ocr(natm),x(natm),y(natm),z(natm),zo,dz,dx,dy
         integer :: ielm(natm)
 
@@ -100,7 +120,7 @@ subroutine scpot(iclr,mv,nv,ns,v,vi,natm,nelm,ielm,z,zo,dz &
         real(8), parameter :: uf=70d0
         real(8) :: rmesh,ocrmesh,zi,z1,z2,ex,aex
 !
-        if (iclr /= 0) then
+        if (iclr == 1) then
            v(1:mv,1:ns)=(0d0,0d0)
           vi(1:mv,1:ns)=(0d0,0d0)
         endif
@@ -120,21 +140,23 @@ subroutine scpot(iclr,mv,nv,ns,v,vi,natm,nelm,ielm,z,zo,dz &
             if (ex < uf) then
               ex=exp(-ex)*ocrmesh
               do k=1,nv
-! asf < 0 for positron, >0 for electron
                 aex=asf(k,i,ie)*ex
                 v(k,l)=v(k,l)+dcmplx(aex)*st(k)
 ! imaginary (absorption): vi
-! positive |sap*asf| must be used for both positron and electron
                 if (k == 1) then
-                  vi(k,l)=vi(k,l)+dcmplx(0d0,abs(sap(ie)*aex))*st(k)
-                else if (sap(ie) > 0d0) then
-                  vi(k,l)=vi(k,l)+dcmplx(0d0,abs(sap(ie)*aex))*st(k)
+                  vi(k,l)=vi(k,l)+dcmplx(0d0,abs(sap(ie))*aex)*st(k)
 ! set sap(ie) < 0 if you want to use only 00(k=1) component of vi.
+                else if (sap(ie) > 0d0) then
+                  vi(k,l)=vi(k,l)+dcmplx(0d0,sap(ie)*aex)*st(k)
                 endif
-              end do
+              end do !k=1,nv
             endif
-          end do
+          end do !i=1,nab
           zi=zi+dz
         end do ! l=1,ns
       end do ! j=1,natm
+
+      if (iclr == -1 .and. negpos > 0) then ! positron
+        v(1:mv,1:ns)=-v(1:mv,1:ns)
+      endif
 end subroutine scpot

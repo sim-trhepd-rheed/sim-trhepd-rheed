@@ -6,10 +6,7 @@
 !*******************************************************************
 subroutine bulkioU(inegpos,nubulk)
         implicit none
-        integer, parameter :: nab=4
         complex(8), dimension(:,:),allocatable :: v,vi
-        real(8), dimension(:,:,:),allocatable :: asf
-        real(8), dimension(:,:),allocatable :: asf_a,asf_b,asf_c
         real(8), dimension(:),allocatable :: rdom,gh,gk
         real(8), dimension(:),allocatable :: Bh,Bk,Bz,da1,sap
         real(8), dimension(:),allocatable :: ocr,x,y,z
@@ -131,8 +128,7 @@ allocate (x(natm)); allocate (y(natm)); allocate (z(natm))
         end do
 !-----------atomic scattering factor--------
 ! domain independent
-allocate (asf_a(nab,nelm)); allocate (asf_b(nab,nelm)); allocate (asf_c(nab,nelm))
-        call asfcrr(inegpos,be,wn,nelm,iz,da1,nab,asf_a,asf_b,asf_c,Bz,aa*bb*sin(gam))
+        call asfcrr(inegpos,be,wn,nelm,iz,da1,Bz,aa*bb*sin(gam))
         ghx=(pi+pi)/(aa*nh)
         ghy=-(pi+pi)/(aa*tan(gam)*nh)
         gky=(pi+pi)/(bb*sin(gam)*nk)
@@ -158,8 +154,7 @@ allocate (jorg(nb(idom))); allocate (nbg(nb(idom)))
 allocate (iv(nbgm,nb(idom)))
 allocate (igh(nvm)); allocate (igk(nvm))
         call blkghk(ngr,nbg,nbgm,nb(idom),ih(ibt),ik(ibt),jorg,nvm, nv,igh,igk,iv)
-allocate (asf(nv,nab,nelm))
-        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,nab,asf_a,asf_c,asf,Bh,Bk)
+        call asfcef(nv,nelm,igh,igk,ghx,ghy,gky,Bh,Bk)
 !----------output(1)----------
         write (1) jorg(1:nb(idom))
         write (1) ngr,nv
@@ -175,22 +170,23 @@ allocate (gh(nv)); allocate (gk(nv))
 allocate (v(nv,ns)); allocate (vi(nv,ns))
 ! bulk unit (in the 'ns' slices)
         call scpot(1,nv,nv,ns,v,vi,natm,nelm,ielm,z,0d0,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,0d0,0d0)
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,0d0,0d0)
 ! lower unit (below the 'ns' slices)
         call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,cc,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,-dx,-dy)
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,-dx,-dy)
 ! upper unit (above the 'ns' slices)
-        call scpot(0,nv,nv,ns,v,vi,natm,nelm,ielm,z,-cc,dz &
-             ,nab,asf,asf_b,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,dx,dy)
+        call scpot(-1,nv,nv,ns,v,vi,natm,nelm,ielm,z,-cc,dz &
+             ,sap,nsg,1,0,0,1,gh,gk,ocr,x,y,dx,dy)
 !!!----------mean inner potential in bulk (eV)----------
         gh0=0d0; gk0=0d0
         U0=0d0
         do i=1,natm
           call strfac(nsg,1,1,0,0,1,gh0,gk0,x(i),y(i),0d0,0d0,st)
 ! real(st) is number of symmetrically equivalent atoms 
-          U0=U0+ocr(i)*dble(st)*asf0(iz(ielm(i)),da1(ielm(i)),nab,inegpos,be)
+          U0=U0+ocr(i)*dble(st)*asf0(iz(ielm(i)),da1(ielm(i)))
         end do
         U0=U0/(aa*bb*sin(gam)*cc)*4d0*pi*eV
+        if (inegpos > 0) U0=-U0     ! positron
         write (*,'(A,F0.5)') ' mean inner potential in bulk (eV) = ',U0
         write (4,'(A,F0.5)') '# mean inner potential in bulk (eV) = ',U0
         write (4,'(A)') '#z:Angstrom,real(U00):eV,imag(U00):eV'
@@ -211,12 +207,10 @@ allocate (v(nv,ns)); allocate (vi(nv,ns))
 !!!                  ,azi+rdom(idom),daz,naz,gi,dg,ng,idiag,iprn)
 deallocate (vi); deallocate (v)
 deallocate (gk); deallocate (gh)
-deallocate (asf)
 deallocate (igk); deallocate (igh)
 deallocate (iv); deallocate (nbg); deallocate (jorg)
 !!!        ibt=ibt+nb(idom)
 !!!      end do ! idom=1,ndom
-deallocate (asf_c); deallocate (asf_b); deallocate (asf_a)
 deallocate (z); deallocate (y); deallocate (x)
 deallocate (ocr); deallocate (ielm)
 deallocate (Bz); deallocate (Bk); deallocate (Bh)
@@ -228,15 +222,16 @@ end subroutine bulkioU
 !**********************************************************
 !       atomic scattering factor (s=0)
 !**********************************************************
-double precision function asf0(iz,da1,nab,inegpos,be)
+double precision function asf0(iz,da1)
         implicit none
-        integer :: inegpos,iz,nab
+        integer, parameter :: nab=4
+        integer :: inegpos,iz
         real(8) :: da1,be
-        real(8) :: a(nab),b(nab),rel
+        real(8) :: a(nab),b(nab) !,rel
         integer :: j
-        real(8), parameter :: c2m=511.001d0
+!        real(8), parameter :: c2m=511.001d0
 
-        rel=1d0+be/c2m
+!        rel=1d0+be/c2m
         call asfparam(iabs(iz),a,b)  ! electron
         if (a(1) < 0d0) then
           write (*,*) ' |iz| must be less than 99 !'
@@ -249,5 +244,4 @@ double precision function asf0(iz,da1,nab,inegpos,be)
         endif
 
         asf0=sum(a(1:nab))
-        if (inegpos > 0) asf0=-asf0     ! positron
 end function asf0
