@@ -1,6 +1,6 @@
 !**********************************************************
 !   rheed multislice method :  structure factor
-!    v.3    90/4/12   v.4:2014/4    T.Hanada
+!    v.3    90/4/12   v.4:2014/4   v.4b:2023/5    T.Hanada
 !**********************************************************
 module TOLconst
         implicit none
