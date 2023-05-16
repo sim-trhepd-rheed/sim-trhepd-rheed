@@ -484,7 +484,10 @@ subroutine p6mm(xs,ys,ndeg)
           ndeg=3 ! twofold axis
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
-        else if (abs(x) < TOL .or. abs(y) < TOL .or. abs(x-y) < TOL) then
+        else if (abs(x) < TOL .or. abs(y) < TOL .or. abs(x-y) < TOL &
+             .or. abs(x+x-y) < TOL .or. abs(y+y-x) < TOL &
+             .or. abs(x+x-y-1d0) < TOL .or. abs(y+y-x-1d0) < TOL &
+             .or. abs(x+y-1d0) < TOL ) then
           ndeg=6 ! mirror plane
           xs(2)=-y;  ys(2)=x-y
           xs(3)=y-x; ys(3)=-x
